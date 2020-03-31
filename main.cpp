@@ -21,13 +21,16 @@ bool buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
 		return false;
 	return true;
 }
+int albunsTaCheio(int tamLgc){
+    return tamLgc < MAX_ALBUM;
+}
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 	
 	char nome[50];
 	
 	// If verifica se ha capacidade no vetor de structs
-	if(tamLgc < MAX_ALBUM){ 
+	if(albunsTaCheio(tamLgc)){ 
 		
 		printf("\nNome do Album: ");
 		gets(nome);
