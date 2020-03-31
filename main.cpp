@@ -1,5 +1,7 @@
-#include<stdio.h>
-#include<string.h>
+#include<stdio.h> 
+#include<string.h> // stricmp();
+#include<conio.h> // getche();
+#include<ctype.h> // toupper();
 
 //#define maxalbum 100
 
@@ -11,42 +13,44 @@ struct albumMusical{
 };
 
 
-bool buscaAlbum(char *nome[], struct albumMusical *am[], int *tl){
+bool buscaAlbum(struct albumMusical *am, int tl, char *nome){
 	
 	int i = 0;
-	while(i < 100 && strcmp(*nome,(*am[i]).nomeAlbum) != 0)
+	while(i < tl && stricmp(nome,am[i].nomeAlbum) != 0)
 		i++;
 		
-	if(i < *tl)
+	if(i < tl){
+		printf("true");
 		return true;
-	else 
-		return false;
+	}
+	return false;
 }
 
-int cadastraNovoAlbum(struct albumMusical am[], int *tl){
+int cadastraNovoAlbum(struct albumMusical *am, int tl){
 	
 	char nome[50];
-	if(*tl < 100){
+	
+	if(tl < 100){
+		
 		gets(nome);
 		
-		if(buscaAlbum(nome, am, tl));
-			printf("Cadatros realizado");
+		if(buscaAlbum(am, tl, nome)){
+		printf("Cadastro");
+		}
 		else
-			printf("Album não encontrado");
+			printf("\nAlbum nao encontrado");
 	}
 	else
-		printf("Limite atingido");
-	
-
+		printf("\nLimite atingido");
 }
 	
 	
 
 char menu(void){
 	
-	printf("Estrobos's Som Dashboard");
-	printf("[1] Cadastrar Novo Album");
-	printf("[ESC] Finalizar");
+	printf("\nEstrobos's Som Dashboard");
+	printf("\n[1] Cadastrar Novo Album");
+	printf("\n[ESC] Finalizar");
 	
 	return toupper(getche());	
 }
@@ -64,7 +68,7 @@ int main(){
 			
 			case '1' :
 				printf("Cadastrar Novo Album");
-				cadastraNovoAlbum(am, &albumQtde);
+				cadastraNovoAlbum(am, albumQtde);
 				break;
 			default:
 				printf("Opcao Invalida");
