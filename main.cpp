@@ -22,7 +22,7 @@ bool buscaAlbum(struct albumMusical *am, int &tl, char *nome){
 	return true;
 }
 
-int cadastraNovoAlbum(struct albumMusical *am, int &tl){
+void cadastraNovoAlbum(struct albumMusical *am, int &tl){
 	
 	char nome[50];
 	
@@ -36,17 +36,13 @@ int cadastraNovoAlbum(struct albumMusical *am, int &tl){
 			printf("Cadastro realizado");
 			strcpy(am[tl].nomeAlbum, nome);
 			tl++;
-			getch();
 		}
-		else{
+		else
 			printf("Album ja existe");
-			getch();
-		}
 	}
-	else{
+	else
 		printf("\nLimite atingido");
-		getch();
-	}
+	getch();
 }
 
 char menu(void){
