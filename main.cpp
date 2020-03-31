@@ -14,7 +14,7 @@ struct albumMusical{
 bool buscaAlbum(struct albumMusical *am, int &tl, char *nome){
 	
 	int i = 0;
-	while(i < tl && stricmp(nome,am[i].nomeAlbum) != 0)
+	while(i < tl && stricmp(nome, am[i].nomeAlbum) != 0)
 		i++;
 		
 	if(i < tl) // se i menor que tl significa que album já existe
