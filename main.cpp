@@ -7,35 +7,69 @@
 
 struct albumMusical{
 	
-	char nomeAlbum[50];
-
+	char nomeAlbum[50], musicas[100][50], artista[50], genero[50];
+	int anoLanc, vetQtdeMusicas[100];
 };
 
-bool buscaAlbum(struct albumMusical *am, int &tl, char *nome){
+bool buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
 	
 	int i = 0;
-	while(i < tl && stricmp(nome, am[i].nomeAlbum) != 0)
+	while(i < tamLgc && stricmp(nome, estruAm[i].nomeAlbum) != 0)
 		i++;
 		
-	if(i < tl) // se i menor que tl significa que album já existe
+	if(i < tamLgc) // se i menor que tl significa que album já existe
 		return false;
 	return true;
 }
 
-void cadastraNovoAlbum(struct albumMusical *am, int &tl){
+void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 	
 	char nome[50];
 	
 	// If verifica se ha capacidade no vetor de structs
-	if(tl < MAX_ALBUM){ 
+	if(tamLgc < MAX_ALBUM){ 
 		
-		printf("\nNome: ");
+		printf("\nNome do Album: ");
 		gets(nome);
 		
-		if(buscaAlbum(am, tl, nome)){
-			printf("Cadastro realizado");
-			strcpy(am[tl].nomeAlbum, nome);
-			tl++;
+		if(buscaAlbum(estruAm, tamLgc, nome)){
+			
+			strcpy(estruAm[tamLgc].nomeAlbum, nome);
+			printf("Ano de lancamento: ");
+			scanf("%d",&estruAm[tamLgc].anoLanc);
+			
+			
+			printf("Artista: ");
+			fflush(stdin);
+			gets(estruAm[tamLgc].artista);
+			
+			printf("Genero: ");
+			fflush(stdin);
+			gets(estruAm[tamLgc].genero);
+			
+			printf("\nMusicas");
+			
+			int i = 0;
+			
+			printf("\n%d Musica: ", i + 1);
+			
+			nome[0] = '\0';
+			
+			fflush(stdin);
+			gets(nome);
+			
+			while(nome[0] != '\0'){
+				
+				strcpy(estruAm[tamLgc].musicas[i], nome);
+				i++;
+				
+				printf("%d Musica: ", i + 1);
+				fflush(stdin);
+				gets(nome);
+			}
+			estruAm[tamLgc].vetQtdeMusicas[tamLgc] = i;
+			printf("\nCadastro realizado");
+			tamLgc++;
 		}
 		else
 			printf("Album ja existe");
@@ -57,7 +91,7 @@ char menu(void){
 
 int main(){
 	
-	struct albumMusical am[MAX_ALBUM];
+	struct albumMusical estruAm[MAX_ALBUM];
 	int albumQtde = 0;
 	char opc;
 	
@@ -67,12 +101,16 @@ int main(){
 		switch(opc){
 			
 			case '1' :
+				
 				printf("Cadastrar Novo Album");
-				cadastraNovoAlbum(am, albumQtde);
+				cadastraNovoAlbum(estruAm, albumQtde);
 				break;
+				
 			case 27 :
+				
 				printf("Fim");
 				break;
+				
 			default:
 				printf("Opcao Invalida");
 		}
