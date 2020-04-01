@@ -51,14 +51,13 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	char nome[MAX_STR];
 	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
-	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas. TEM QUE NEGAR
+	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas.
 		return 0; // 0 Nao encontrou album para inserir
 	
 	// (2) TALVEZ HA UMA REDUNDANCIA
 	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas))
 		return 1; // 1 Quando nao cabe musicas
 	
-	// (1) FUNCAO LER MUSICA
 	lerMusicas(estruAm, tamLgc, estruAm[pos].vetQtdeMusicas);
 	return 2; //achoum, tem espaco e inseriu
 }
