@@ -19,9 +19,9 @@ int buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
 	while(i < tamLgc && stricmp(nome, estruAm[i].nomeAlbum) != 0)
 		i++;
 		
-	if(i < tamLgc) // se i menor que tl significa que album já existe
+	if(i < tamLgc) // se i menor que tl significa que album ja existe
 		return i; //Encontrou, Modulariazar esse if
-	return -1; //Não Encontrou!
+	return -1; //Nao Encontrou!
 }
 bool albumTaCheio(int tamLgc){
     return tamLgc < MAX_ALBUM;
@@ -51,8 +51,8 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	char nome[MAX_STR];
 	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
-	if(pos < 0) // se buscaAlbum retornar falso é porque encontrou album para inserir musicas. TEM QUE NEGAR
-		return 0; // 0 Não encontrou album para inserir
+	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas. TEM QUE NEGAR
+		return 0; // 0 Nao encontrou album para inserir
 	
 	// (2) TALVEZ HA UMA REDUNDANCIA
 	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas))
@@ -73,7 +73,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 		printf("\nNome do Album: ");
 		gets(nome);
 		
-		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso já existe, então não cadastra
+		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso ja existe, então não cadastra
 			strcpy(estruAm[tamLgc].nomeAlbum, nome);
 			
 			printf("Ano de lancamento: ");
@@ -87,7 +87,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas\n");
-			estruAm[tamLgc].vetQtdeMusicas = 0; // Sempre que é novo cadastro sera zerado!
+			estruAm[tamLgc].vetQtdeMusicas = 0; // Sempre que e novo cadastro sera zerado!
 			
 			lerMusicas(estruAm, tamLgc, estruAm[tamLgc].vetQtdeMusicas); //passando zero pois sera nono album
 			
