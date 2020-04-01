@@ -10,18 +10,18 @@
 struct albumMusical{
 	
 	char nomeAlbum[MAX_STR], musicas[MAX_SONGS][MAX_STR], artista[MAX_STR], genero[MAX_STR];
-	int anoLanc, vetQtdeMusicas[MAX_ALBUM];
+	int anoLanc, vetQtdeMusicas;
 };
 
-bool buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
+int buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
 	
 	int i = 0;
 	while(i < tamLgc && stricmp(nome, estruAm[i].nomeAlbum) != 0)
 		i++;
 		
 	if(i < tamLgc) // se i menor que tl significa que album já existe
-		return false; //Modulariazar esse if
-	return true;
+		return i; //Encontrou, Modulariazar esse if
+	return -1; //Não Encontrou!
 }
 bool albumTaCheio(int tamLgc){
     return tamLgc < MAX_ALBUM;
@@ -34,19 +34,22 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
 	//ENTRAR COM NOME DO ALBUM NOME DO ALBUM * continuar
 	printf("\nNome do Album: ");
-	char nome[50];
-	
-	if(buscaAlbum(estruAm, tamLgc, gets(nome))) // se buscaAlbum retornar falso é porque encontrou album para inserir musicas
+	char nome[MAX_STR];
+	//int pos
+	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
+	if(pos < 0) // se buscaAlbum retornar falso é porque encontrou album para inserir musicas. TEM QUE NEGAR
 		return 0; // 0 Não encontrou album para inserir
 	
-	printf("\nNome gititado: %s",nome);
-	printf("\nms qt vet: %d", estruAm[tamLgc].vetQtdeMusicas[tamLgc]);
+	printf("Nome digitado: %s", nome);
+	printf("\nestruAm qtde musica: %d", estruAm[pos].vetQtdeMusicas);
 	getch();
-	if(!musicasTaCheio(estruAm[tamLgc].vetQtdeMusicas[tamLgc])) // parei aqui
+	
+	
+	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas)) // parei aqui
 		return 1; // 1 Quando não cabe musicas
 		
 	getch();
-	return 2;
+	return 2; //2 Prossegue com a inserção
 }
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
@@ -59,7 +62,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 		printf("\nNome do Album: ");
 		gets(nome);
 		
-		if(buscaAlbum(estruAm, tamLgc, nome)){ // se buscaAlbum retornar falso já existe, então não cadastra
+		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso já existe, então não cadastra
 			strcpy(estruAm[tamLgc].nomeAlbum, nome);
 			
 			printf("Ano de lancamento: ");
@@ -86,7 +89,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 			if(!musicasTaCheio(i))
 				printf("Limite de musicas excedido\n");
 				
-			estruAm[tamLgc].vetQtdeMusicas[tamLgc] = i; //Vetor Tamanho Logico de Musicas Recebendo Quantidade Exate de Musicas
+			estruAm[tamLgc].vetQtdeMusicas = i; //Vetor Tamanho Logico de Musicas Recebendo Quantidade Exate de Musicas
 			printf("\nCadastro realizado");
 			tamLgc++;
 		}
@@ -112,8 +115,8 @@ char menu(void){
 int main(){
 	
 	struct albumMusical estruAm[MAX_ALBUM];
-	int albumQtde = 0;
-	bool flag;
+	int albumQtde = 0, flag;
+	
 	char opc;
 	
 	do{
@@ -144,7 +147,7 @@ int main(){
 		
 	}while(opc != 27);
 	//printf("albumQtde: %d",albumQtde);
-	//printf("\nTL Musicas na 0: %d",estruAm[0].vetQtdeMusicas[0]);
+	//printf("\nTL Musicas na 0: %d",estruAm[0].vetQtdeMusicas);
 	
 	return 0;
 }
