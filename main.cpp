@@ -5,10 +5,11 @@
 
 #define MAX_ALBUM 3
 #define MAX_SONGS 3
+#define MAX_STR 50
 
 struct albumMusical{
 	
-	char nomeAlbum[50], musicas[MAX_SONGS][50], artista[50], genero[50];
+	char nomeAlbum[MAX_STR], musicas[MAX_SONGS][MAX_STR], artista[MAX_STR], genero[MAX_STR];
 	int anoLanc, vetQtdeMusicas[MAX_ALBUM];
 };
 
@@ -19,7 +20,7 @@ bool buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
 		i++;
 		
 	if(i < tamLgc) // se i menor que tl significa que album já existe
-		return false;
+		return false; //Modulariazar esse if
 	return true;
 }
 bool albumTaCheio(int tamLgc){
@@ -31,14 +32,21 @@ bool musicasTaCheio(int tamLgc){
 
 int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
-	//ENTRAR COM NOME DO ALBUM NOME DO ALBUM
+	//ENTRAR COM NOME DO ALBUM NOME DO ALBUM * continuar
 	printf("\nNome do Album: ");
 	char nome[50];
-	if(!buscaAlbum(estruAm, tamLgc, gets(nome)))
-		if(musicasTaCheio(estruAm[tamLgc].vetQtdeMusicas[tamLgc]))
-	return false;
 	
-	//getch();
+	if(buscaAlbum(estruAm, tamLgc, gets(nome))) // se buscaAlbum retornar falso é porque encontrou album para inserir musicas
+		return 0; // 0 Não encontrou album para inserir
+	
+	printf("\nNome gititado: %s",nome);
+	printf("\nms qt vet: %d", estruAm[tamLgc].vetQtdeMusicas[tamLgc]);
+	getch();
+	if(!musicasTaCheio(estruAm[tamLgc].vetQtdeMusicas[tamLgc])) // parei aqui
+		return 1; // 1 Quando não cabe musicas
+		
+	getch();
+	return 2;
 }
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
@@ -51,40 +59,34 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 		printf("\nNome do Album: ");
 		gets(nome);
 		
-		if(buscaAlbum(estruAm, tamLgc, nome)){
-			
+		if(buscaAlbum(estruAm, tamLgc, nome)){ // se buscaAlbum retornar falso já existe, então não cadastra
 			strcpy(estruAm[tamLgc].nomeAlbum, nome);
+			
 			printf("Ano de lancamento: ");
 			scanf("%d",&estruAm[tamLgc].anoLanc);
-			
 			
 			printf("Artista: ");
 			fflush(stdin);
 			gets(estruAm[tamLgc].artista);
 			
 			printf("Genero: ");
-			fflush(stdin);
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas\n");
-			
 			int i = 0;
-			
-			do{
-				printf("%d Musica: ", i + 1);
-				fflush(stdin);
-				gets(nome);
+				
+			printf("%d Musica: ", i + 1);
+			while(musicasTaCheio(i) && stricmp(gets(nome),"")){
 				
 				strcpy(estruAm[tamLgc].musicas[i++], nome);
-				//i++; //tem que fazer um if
 				
-			}while(musicasTaCheio(i) && nome[0] != '\0');
-			
-			printf("\n%d", i);
+				if(musicasTaCheio(i))
+					printf("%d Musica: ", i + 1);
+			}
 			if(!musicasTaCheio(i))
 				printf("Limite de musicas excedido\n");
 				
-			estruAm[tamLgc].vetQtdeMusicas[tamLgc] = i;
+			estruAm[tamLgc].vetQtdeMusicas[tamLgc] = i; //Vetor Tamanho Logico de Musicas Recebendo Quantidade Exate de Musicas
 			printf("\nCadastro realizado");
 			tamLgc++;
 		}
@@ -111,6 +113,7 @@ int main(){
 	
 	struct albumMusical estruAm[MAX_ALBUM];
 	int albumQtde = 0;
+	bool flag;
 	char opc;
 	
 	do{
@@ -127,8 +130,9 @@ int main(){
 			case '2' :
 				
 				printf("Inserir Musicas");
-				inserirMusicas(estruAm, albumQtde);
-				
+				flag = inserirMusicas(estruAm, albumQtde);
+				printf("\nFlag: %d",flag);
+				getch();
 			case 27 :
 				
 				printf("Fim");
@@ -139,8 +143,8 @@ int main(){
 		}
 		
 	}while(opc != 27);
-	printf("albumQtde: %d",albumQtde);
-	printf("\nTL Musicas na 0: %d",estruAm[0].vetQtdeMusicas[0]);
+	//printf("albumQtde: %d",albumQtde);
+	//printf("\nTL Musicas na 0: %d",estruAm[0].vetQtdeMusicas[0]);
 	
 	return 0;
 }
