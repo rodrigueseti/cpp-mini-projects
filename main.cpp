@@ -4,7 +4,7 @@
 #include<ctype.h> // toupper();
 
 #define MAX_ALBUM 3
-#define MAX_SONGS 3
+#define MAX_SONGS 2
 #define MAX_STR 50
 
 struct albumMusical{
@@ -29,27 +29,46 @@ bool albumTaCheio(int tamLgc){
 bool musicasTaCheio(int tamLgc){
 	return tamLgc < MAX_SONGS;
 }
+void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
+	
+	
+	printf("%d Musica: ", i + 1);
+	char nome[MAX_STR];
+	while(musicasTaCheio(i) && stricmp(gets(nome),"")){
+		
+		strcpy(estruAm[tamLgc].musicas[i++], nome);
+		
+		if(musicasTaCheio(i))
+			printf("%d Musica: ", i + 1);
+	}
+	if(!musicasTaCheio(i))
+				printf("Limite de musicas excedido\n");
+				
+	//estruAm[tamLgc].vetQtdeMusicas = i; (3) REDUNDANTE TALVEZ
+}
 
 int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
 	//ENTRAR COM NOME DO ALBUM NOME DO ALBUM * continuar
 	printf("\nNome do Album: ");
 	char nome[MAX_STR];
-	//int pos
+	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 	if(pos < 0) // se buscaAlbum retornar falso é porque encontrou album para inserir musicas. TEM QUE NEGAR
 		return 0; // 0 Não encontrou album para inserir
 	
-	printf("Nome digitado: %s", nome);
-	printf("\nestruAm qtde musica: %d", estruAm[pos].vetQtdeMusicas);
-	getch();
+	//printf("Nome digitado: %s", nome);
+	//printf("\nestruAm qtde musica: %d", estruAm[pos].vetQtdeMusicas);
+	//getch();
 	
-	
-	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas)) // parei aqui
+	// (2) TALVEZ HA UMA REDUNDANCIA
+	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas))
 		return 1; // 1 Quando não cabe musicas
-		
-	getch();
-	return 2; //2 Prossegue com a inserção
+	//getch();
+	//return 2; //2 Prossegue com a inserção
+	//printf("%d Musica: ", i + 1); //Continuar
+	
+	// (1) FUNCAO LER MUSICA
 }
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
@@ -76,20 +95,25 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas\n");
-			int i = 0;
-				
-			printf("%d Musica: ", i + 1);
+			
+			lerMusicas(estruAm, tamLgc, estruAm[tamLgc].vetQtdeMusicas); //passando zero pois sera nono album
+			//int i = 0; //chamar função passando 0
+			
+			//sperarar cadastro de musicas	
+			
+			/*printf("%d Musica: ", i + 1);
 			while(musicasTaCheio(i) && stricmp(gets(nome),"")){
 				
 				strcpy(estruAm[tamLgc].musicas[i++], nome);
 				
 				if(musicasTaCheio(i))
 					printf("%d Musica: ", i + 1);
-			}
-			if(!musicasTaCheio(i))
-				printf("Limite de musicas excedido\n");
-				
-			estruAm[tamLgc].vetQtdeMusicas = i; //Vetor Tamanho Logico de Musicas Recebendo Quantidade Exate de Musicas
+			}*/
+			/*if(!musicasTaCheio(i))
+				printf("Limite de musicas excedido\n");*/
+			
+			// tmb vai pra função
+			//estruAm[tamLgc].vetQtdeMusicas = i; //Vetor Tamanho Logico de Musicas Recebendo Quantidade Exata de Musicas
 			printf("\nCadastro realizado");
 			tamLgc++;
 		}
@@ -116,12 +140,12 @@ int main(){
 	
 	struct albumMusical estruAm[MAX_ALBUM];
 	int albumQtde = 0, flag;
-	
 	char opc;
 	
 	do{
 		opc = menu();
 		clrscr();
+		
 		switch(opc){
 			
 			case '1' :
@@ -133,8 +157,12 @@ int main(){
 			case '2' :
 				
 				printf("Inserir Musicas");
+				
 				flag = inserirMusicas(estruAm, albumQtde);
-				printf("\nFlag: %d",flag);
+				if(flag == 0) 
+					printf("Album nao encontrado");
+				if(flag == 1)
+					printf("\nLimite de musicas");
 				getch();
 			case 27 :
 				
