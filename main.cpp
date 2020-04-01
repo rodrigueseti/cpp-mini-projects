@@ -56,11 +56,11 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
 	// (2) TALVEZ HA UMA REDUNDANCIA
 	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas))
-		return 1; // 1 Quando não cabe musicas
+		return 1; // 1 Quando nao cabe musicas
 	
 	// (1) FUNCAO LER MUSICA
 	lerMusicas(estruAm, tamLgc, estruAm[pos].vetQtdeMusicas);
-	return 2; //achoum, tem espaço e inseriu
+	return 2; //achoum, tem espaco e inseriu
 }
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
@@ -73,7 +73,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 		printf("\nNome do Album: ");
 		gets(nome);
 		
-		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso ja existe, então não cadastra
+		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso ja existe, entao nao cadastra
 			strcpy(estruAm[tamLgc].nomeAlbum, nome);
 			
 			printf("Ano de lancamento: ");
