@@ -3,9 +3,9 @@
 #include<conio2.h> // getche(), clrscr();
 #include<ctype.h> // toupper();
 
-#define MAX_ALBUM 3
-#define MAX_SONGS 4
-#define MAX_STR 50
+#define MAX_ALBUM 3 //Seta a quantidade maxima de albuns
+#define MAX_SONGS 4	//Seta a quantidade maxima de musicacas em cada album
+#define MAX_STR 50 //Seta o tamanho total de uma palavra
 
 struct albumMusical{
 	
