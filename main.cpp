@@ -121,7 +121,7 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 				//getch();
 				break;
 			case '2' :
-				printf("Alterar Lancamento\nLancamento (Ano): ");
+				printf("Alterar Lancamento (%s: %d)\nLancamento (Ano): ", estruAm[pos].nomeAlbum, estruAm[pos].anoLanc);
 				scanf("%d",&estruAm[pos].anoLanc);
 				printf("Alterado");
 				//getch();
