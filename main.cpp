@@ -9,6 +9,12 @@
 
 //VERS√ÉO MASTER
 
+/*
+	TAREFAS
+	
+	Modularizar nome do album
+*/
+
 struct albumMusical{
 	
 	char nomeAlbum[MAX_STR], musicas[MAX_SONGS][MAX_STR], artista[MAX_STR], genero[MAX_STR];
@@ -31,6 +37,7 @@ bool albumTaCheio(int tamLgc){
 bool musicasTaCheio(int tamLgc){
 	return tamLgc < MAX_SONGS;
 }
+//															tamLgcMusic
 void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
 	
 	
@@ -49,8 +56,8 @@ void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
 
 int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
-	printf("\nNome do Album: ");
-	char nome[MAX_STR];
+	printf("\nNome do Album: "); //Modularizavel(1)
+	char nome[MAX_STR]; //Modularizavel(1)
 	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas.
@@ -62,6 +69,98 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
 	lerMusicas(estruAm, tamLgc, estruAm[pos].vetQtdeMusicas);
 	return 2; //achoum, tem espaco e inseriu
+}
+///						estrutura				album
+int buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic, char *nome){
+	
+	int i = 0;
+	while(i < tamLgcMusic && stricmp(nome, estruAm[pos].musicas[i]) != 0)
+		i++;
+		
+	if(i < tamLgcMusic)
+		return i; //Encontrou a musica
+	return -1; //N„o encontrou
+}
+
+char menuAlterar(struct albumMusical *estruAm, int pos){
+	
+	clrscr();
+	printf("ESTROBOS'S SOM DASHBOARD (Alterar)\n");
+	printf("\nAlbum: %s\n", estruAm[pos].nomeAlbum);
+	printf("\n[1] Alterar nome do album");
+	printf("\n[2] Alterar lancamento");
+	printf("\n[3] Alterar artista");
+	printf("\n[4] Alterar genero musical");
+	printf("\n[5] Alterar musicas");
+	printf("\n[ESC] Finalizar\n");
+	
+	return toupper(getch());	
+}
+int alterarDados(struct albumMusical *estruAm, int &tamLgc){
+	
+	printf("\nNome do Album: "); //Modularizavel(1)
+	char nome[MAX_STR], opc; //Modularizavel(1)
+	
+	int pos = buscaAlbum(estruAm, tamLgc, gets(nome)), posMusic;
+	
+	if(pos < 0) //Se entrar no If n„o encontrou album para alterar dados
+		return 0;
+	
+	do{
+		opc = menuAlterar(estruAm, pos);
+		clrscr();
+		switch(opc){
+			case '1' :
+				printf("Alterar nome do album");
+				printf("\nNovo nome: ");
+				if(buscaAlbum(estruAm, tamLgc, gets(nome)) >= 0)
+					printf("\nNome ja existe");
+				else{ strcpy(estruAm[pos].nomeAlbum, nome);
+					printf("Alterado");
+				} 
+				//getch();
+				break;
+			case '2' :
+				printf("Alterar Lancamento\nLancamento (Ano): ");
+				scanf("%d",&estruAm[pos].anoLanc);
+				printf("Alterado");
+				//getch();
+				break;
+			case '3' :
+				fflush(stdin);
+				printf("Alterar artista\nNome do artista: ");
+				strcpy(estruAm[pos].artista, gets(nome));
+				break;
+			case '4' :
+				printf("Alterar Genero Musical\nNome do artista: ");
+				strcpy(estruAm[pos].genero, gets(nome));
+				printf("Alterado");
+				break;
+			case '5' :
+				printf("Alterar Musica\nNome: ");
+				
+				//  buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic)
+				posMusic = buscaMusica(estruAm, pos, estruAm[pos].vetQtdeMusicas, gets(nome));
+				if(posMusic >= 0){
+					printf("Novo nome: ");
+					gets(estruAm[pos].musicas[posMusic]);
+					printf("Alterado");
+				}
+				else 
+					printf("\nMusica nao encontrada");
+				getch();
+				break;
+			case 27 : //REMOVER
+				break;
+			default : // REMOVER
+				printf("Invalid Input");	
+		}
+		//getch();
+	}while(opc != 27);
+	
+	return true; //apenas retornanado para finalizar
+	
+	getch();
 }
 
 void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
@@ -100,7 +199,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 	}
 	else
 		printf("\nLimite atingido");
-	getch();
+	//getch();
 }
 
 char menu(void){
@@ -109,6 +208,7 @@ char menu(void){
 	printf("ESTROBOS'S SOM DASHBOARD\n");
 	printf("\n[1] Cadastrar Novo Album");
 	printf("\n[2] Inserir Musicas");
+	printf("\n[3] Alterar Dados");
 	printf("\n[ESC] Finalizar\n");
 	
 	return toupper(getch());	
@@ -128,7 +228,7 @@ int main(){
 			
 			case '1' :
 				
-				printf("Cadastrar Novo Album");
+				printf("CADASTRAR NOVO ALBUM");
 				cadastraNovoAlbum(estruAm, albumQtde);
 				break;
 				
@@ -143,17 +243,30 @@ int main(){
 					printf("\nLimite de musicas");
 				if(flag == 2)
 					printf("\nMusicas inseridas");
-				getch();
+				//getch();
+				break;
+				
+			case '3' :
+				
+				printf("Alterar Dados");
+				if(!alterarDados(estruAm, albumQtde))
+					printf("Album nao encontrado ");
+				printf("Finalizado");
+				//getch();
+				break;
+				
 			case 27 :
 				
 				printf("Fim");
 				break;
 				
 			default:
-				printf("Opcao Invalida");
+				printf("Invalid Input");
+				
 		}
-		
+		getch();
 	}while(opc != 27);
+	//printf("\nArtista 1album: %s", estruAm[0].artista);
 	
 	return 0;
 }
