@@ -79,7 +79,18 @@ int buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic, char *n
 		
 	if(i < tamLgcMusic)
 		return i; //Encontrou a musica
-	return -1; //Nï¿½o encontrou
+	return -1; //Nao encontrou
+}
+
+int buscaGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
+	
+	int i = 0;
+	while(i < tamLgc && stricmp(nome, estruAm[i].genero) != 0)
+		i++;
+	
+	if(i < tamLgc)
+		return i; //Encontrou a musica
+	return -1; //Nao encontrou
 }
 
 char menuAlterar(struct albumMusical *estruAm, int pos){
@@ -217,6 +228,13 @@ void listarAlbumMusica(struct albumMusical *estruAm, int &pos){
 		printf("\n%d %s", i + 1, estruAm[pos].musicas[i]);
 	getch();
 }
+void listarAlbumGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
+	
+	for (int i = 0; i < tamLgc; i++)
+		if(!stricmp(estruAm[i].genero, nome))
+			printf("\n%d %s - Genero: %s", i + 1, estruAm[i].nomeAlbum, estruAm[i].genero);
+	getch();
+}
 
 char menuListarDados(){
 	
@@ -225,6 +243,7 @@ char menuListarDados(){
 	printf("\n[1] Informacoes do album");
 	printf("\n[2] Album e musicas");
 	printf("\n[3] Albuns por genero");
+	//printf("\n[4] Listar tudo");
 	printf("\n[ESC] Finalizar\n");
 	
 	
@@ -234,7 +253,7 @@ char menuListarDados(){
 int listarDados(struct albumMusical *estruAm, int &tamLgc){
 	
 	char nome[MAX_STR], opc;
-	int pos;
+	int pos, flag;
 	
 	if(tamLgc <= 0) //Retorna 0 se não ha nenhuma informacao a ser listada, ou nenhum album gravado
 		return 0;
@@ -266,9 +285,21 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 					getch();
 				}
 				if(pos >= 0)
-					listarAlbumMusica(estruAm, pos);
+					listarAlbumMusica(estruAm, tamLgc);
 				break;
 			case '3' :
+				
+				printf("ALBUNS POR GENERO");
+				printf("\nGenero: ");
+				
+				flag = buscaGenero(estruAm, tamLgc, gets(nome));
+				
+				if(flag == -1){
+					printf("Genero nao encontrado");
+					getch();
+				}
+				if(flag >= 0)
+					listarAlbumGenero(estruAm, tamLgc, nome);
 				break;
 		}
 		
