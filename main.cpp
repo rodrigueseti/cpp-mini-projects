@@ -18,7 +18,7 @@
 struct albumMusical{
 	
 	char nomeAlbum[MAX_STR], musicas[MAX_SONGS][MAX_STR], artista[MAX_STR], genero[MAX_STR];
-	int anoLanc, vetQtdeMusicas;
+	int anoLanc, QtdeMusicas;
 };
 
 int buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
@@ -64,10 +64,10 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 		return 0; // 0 Nao encontrou album para inserir
 	
 	// (2) TALVEZ HA UMA REDUNDANCIA
-	if(!musicasTaCheio(estruAm[pos].vetQtdeMusicas))
+	if(!musicasTaCheio(estruAm[pos].QtdeMusicas))
 		return 1; // 1 Quando nao cabe musicas
 	
-	lerMusicas(estruAm, tamLgc, estruAm[pos].vetQtdeMusicas);
+	lerMusicas(estruAm, tamLgc, estruAm[pos].QtdeMusicas);
 	return 2; //achoum, tem espaco e inseriu
 }
 ///						estrutura				album
@@ -79,7 +79,7 @@ int buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic, char *n
 		
 	if(i < tamLgcMusic)
 		return i; //Encontrou a musica
-	return -1; //Não encontrou
+	return -1; //Nï¿½o encontrou
 }
 
 char menuAlterar(struct albumMusical *estruAm, int pos){
@@ -103,7 +103,7 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome)), posMusic;
 	
-	if(pos < 0) //Se entrar no If não encontrou album para alterar dados
+	if(pos < 0) //Se entrar no If nï¿½o encontrou album para alterar dados
 		return 0;
 	
 	do{
@@ -137,12 +137,13 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 				printf("Alterar Genero Musical\nNome do artista: ");
 				strcpy(estruAm[pos].genero, gets(nome));
 				printf("Alterado");
+				getch();
 				break;
 			case '5' :
 				printf("Alterar Musica\nNome: ");
 				
 				//  buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic)
-				posMusic = buscaMusica(estruAm, pos, estruAm[pos].vetQtdeMusicas, gets(nome));
+				posMusic = buscaMusica(estruAm, pos, estruAm[pos].QtdeMusicas, gets(nome));
 				if(posMusic >= 0){
 					printf("Novo nome: ");
 					gets(estruAm[pos].musicas[posMusic]);
@@ -157,7 +158,6 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 			default : // REMOVER
 				printf("Invalid Input");	
 		}
-		//getch();
 	}while(opc != 27);
 	
 	return true; //apenas retornanado para finalizar
@@ -189,9 +189,9 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas (Enter para sair)\n");
-			estruAm[tamLgc].vetQtdeMusicas = 0; // Sempre que e novo cadastro sera zerado!
+			estruAm[tamLgc].QtdeMusicas = 0; // Sempre que e novo cadastro sera zerado!
 			
-			lerMusicas(estruAm, tamLgc, estruAm[tamLgc].vetQtdeMusicas); //passando zero pois sera nono album
+			lerMusicas(estruAm, tamLgc, estruAm[tamLgc].QtdeMusicas); //passando zero pois sera nono album
 			
 			printf("\nCadastro realizado");
 			tamLgc++;
@@ -201,15 +201,15 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 	}
 	else
 		printf("\nLimite atingido");
-	//getch();
+	getch();
 }
 void listarAlbum(struct albumMusical *estruAm, int &pos){
 	
 	printf("Ano de Lancamento: %d", estruAm[pos].anoLanc);
 	printf("\nNome do Artista: %s", estruAm[pos].artista);
 	printf("\nGenero Musical: %s", estruAm[pos].genero);
-	printf("\nQuantidade de Musicas: %d", estruAm[pos].vetQtdeMusicas);
-	//getch(); excluir
+	printf("\nQuantidade de Musicas: %d", estruAm[pos].QtdeMusicas);
+	getch();
 }
 
 char menuListarDados(){
@@ -230,7 +230,7 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 	char nome[MAX_STR], opc;
 	int pos;
 	
-	if(tamLgc <= 0) //Retorna 0 se não ha nenhuma informação a ser listada, ou nenhum album gravado
+	if(tamLgc <= 0) //Retorna 0 se nï¿½o ha nenhuma informaï¿½ï¿½o a ser listada, ou nenhum album gravado
 		return 0;
 	
 	do{
@@ -243,19 +243,19 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 				printf("\nNome do album: ");
 				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 				
-				if(pos == -1)
+				if(pos == -1){
 					printf("Album nao encontrado");
+					getch();
+				}
 				if(pos >= 0)
 					listarAlbum(estruAm, pos);
-				
 				break;
 			case '2' :
 				break;
 			case '3' :
 				break;
-			
 		}
-		getch();
+		
 	}while(opc != 27);
 	return 1; //Retorno para finalizar com sucesso
 }
@@ -302,7 +302,7 @@ int main(){
 					printf("\nLimite de musicas");
 				if(flag == 2)
 					printf("\nMusicas inseridas");
-				//getch();
+				getch();
 				break;
 				
 			case '3' :
@@ -311,11 +311,14 @@ int main(){
 				if(!alterarDados(estruAm, albumQtde))
 					printf("Album nao encontrado ");
 				printf("Finalizado");
-				//getch();
+				getch();
 				break;
 			case '5' :
-				if(!listarDados(estruAm, albumQtde))
+				if(!listarDados(estruAm, albumQtde)){
 					printf("Nada para listar");
+					getch();
+				}
+					
 				break;
 			case 27 :
 				
@@ -326,7 +329,7 @@ int main(){
 				printf("Invalid Input");
 				
 		}
-		getch();
+		//getch();
 	}while(opc != 27);
 	//printf("\nArtista 1album: %s", estruAm[0].artista);
 	
