@@ -43,6 +43,7 @@ void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
 	
 	printf("%d Musica: ", i + 1);
 	char nome[MAX_STR];
+	fflush(stdin);
 	while(musicasTaCheio(i) && stricmp(gets(nome),"")){
 		
 		strcpy(estruAm[tamLgc].musicas[i++], nome);
@@ -58,7 +59,7 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR]; //Modularizavel(1)
-	
+	//fflush(stdin);
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas.
 		return 0; // 0 Nao encontrou album para inserir
@@ -111,7 +112,7 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR], opc; //Modularizavel(1)
-	
+	//fflush(stdin);
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome)), posMusic;
 	
 	if(pos < 0) //Se entrar no If n�o encontrou album para alterar dados
@@ -124,6 +125,7 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 			case '1' :
 				printf("Alterar nome do album");
 				printf("\nNovo nome: ");
+				//fflush(stdin);
 				if(buscaAlbum(estruAm, tamLgc, gets(nome)) >= 0)
 					printf("\nNome ja existe");
 				else{ strcpy(estruAm[pos].nomeAlbum, nome);
@@ -140,12 +142,14 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 			case '3' :
 				fflush(stdin);
 				printf("Alterar artista\nNome do artista: ");
+				//fflush(stdin);
 				strcpy(estruAm[pos].artista, gets(nome));
 				printf("Alterado");
 				getch();
 				break;
 			case '4' :
 				printf("Alterar Genero Musical\nNome do artista: ");
+				//fflush(stdin);
 				strcpy(estruAm[pos].genero, gets(nome));
 				printf("Alterado");
 				getch();
@@ -154,9 +158,11 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 				printf("Alterar Musica\nNome: ");
 				
 				//  buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic)
+				//fflush(stdin);
 				posMusic = buscaMusica(estruAm, pos, estruAm[pos].QtdeMusicas, gets(nome));
 				if(posMusic >= 0){
 					printf("Novo nome: ");
+					//fflush(stdin);
 					gets(estruAm[pos].musicas[posMusic]);
 					printf("Alterado");
 				}
@@ -184,6 +190,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 	if(albumTaCheio(tamLgc)){ 
 		
 		printf("\nNome do Album: ");
+		//fflush(stdin);
 		gets(nome);
 		
 		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso ja existe, entao nao cadastra
@@ -197,6 +204,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 			gets(estruAm[tamLgc].artista);
 			
 			printf("Genero: ");
+			//fflush(stdin);
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas (Enter para sair)\n");
@@ -238,15 +246,15 @@ void listarAlbumGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
 void listarTudo(struct albumMusical *estruAm, int &tamLgc){
 	
 	for(int i = 0; i < tamLgc; i++){
-		printf("\nAlbum: %s", estruAm[i].nomeAlbum);
+		printf("\n\nAlbum: %s", estruAm[i].nomeAlbum);
 		printf("\nAno de Lancamento: %d", estruAm[i].anoLanc);
 		printf("\nNome do Artista: %s", estruAm[i].artista);
 		printf("\nGenero Musical: %s", estruAm[i].genero);
-		printf("\nQuantidade de Musicas: %d\n", estruAm[i].QtdeMusicas);
+		printf("\nQuantidade de Musicas: %d", estruAm[i].QtdeMusicas);
 		printf("\nMusicas");
 		
 		for(int j = 0; j < estruAm[i].QtdeMusicas; j++)		
-			printf("%d %s\n", j + 1, estruAm[j].musicas);
+			printf("\n%d %s", j + 1, estruAm[i].musicas[j]);
 	}
 	getch();
 }
@@ -282,6 +290,7 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 			case '1' :
 				printf("INFORMACOES DO ALBUM\n"); //Generalizar funcao de ler album
 				printf("\nNome do album: ");
+				//fflush(stdin);
 				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 				
 				if(pos == -1){
@@ -294,6 +303,7 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 			case '2' :
 				printf("ALBUM E MUSICAS");
 				printf("\nNome do album: ");
+				//fflush(stdin);
 				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 				
 				if(pos == -1){
@@ -307,7 +317,7 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 				
 				printf("ALBUNS POR GENERO");
 				printf("\nGenero: ");
-				
+				//fflush(stdin);
 				flag = buscaGenero(estruAm, tamLgc, gets(nome));
 				
 				if(flag == -1){
