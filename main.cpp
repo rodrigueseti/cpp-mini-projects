@@ -211,6 +211,12 @@ void listarAlbum(struct albumMusical *estruAm, int &pos){
 	printf("\nQuantidade de Musicas: %d", estruAm[pos].QtdeMusicas);
 	getch();
 }
+void listarAlbumMusica(struct albumMusical *estruAm, int &pos){
+	
+	for (int i = 0; i < estruAm[pos].QtdeMusicas; i++)
+		printf("\n%d %s", i + 1, estruAm[pos].musicas[i]);
+	getch();
+}
 
 char menuListarDados(){
 	
@@ -230,7 +236,7 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 	char nome[MAX_STR], opc;
 	int pos;
 	
-	if(tamLgc <= 0) //Retorna 0 se nï¿½o ha nenhuma informaï¿½ï¿½o a ser listada, ou nenhum album gravado
+	if(tamLgc <= 0) //Retorna 0 se não ha nenhuma informacao a ser listada, ou nenhum album gravado
 		return 0;
 	
 	do{
@@ -251,6 +257,16 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 					listarAlbum(estruAm, pos);
 				break;
 			case '2' :
+				printf("ALBUM E MUSICAS");
+				printf("\nNome do album: ");
+				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
+				
+				if(pos == -1){
+					printf("Album nao encontrado");
+					getch();
+				}
+				if(pos >= 0)
+					listarAlbumMusica(estruAm, pos);
 				break;
 			case '3' :
 				break;
@@ -329,9 +345,7 @@ int main(){
 				printf("Invalid Input");
 				
 		}
-		//getch();
 	}while(opc != 27);
-	//printf("\nArtista 1album: %s", estruAm[0].artista);
 	
 	return 0;
 }
