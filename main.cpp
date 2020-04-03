@@ -235,6 +235,21 @@ void listarAlbumGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
 			printf("\n%d %s - Genero: %s", i + 1, estruAm[i].nomeAlbum, estruAm[i].genero);
 	getch();
 }
+void listarTudo(struct albumMusical *estruAm, int &tamLgc){
+	
+	for(int i = 0; i < tamLgc; i++){
+		printf("\nAlbum: %s", estruAm[i].nomeAlbum);
+		printf("\nAno de Lancamento: %d", estruAm[i].anoLanc);
+		printf("\nNome do Artista: %s", estruAm[i].artista);
+		printf("\nGenero Musical: %s", estruAm[i].genero);
+		printf("\nQuantidade de Musicas: %d\n", estruAm[i].QtdeMusicas);
+		printf("\nMusicas");
+		
+		for(int j = 0; j < estruAm[i].QtdeMusicas; j++)		
+			printf("%d %s\n", j + 1, estruAm[j].musicas);
+	}
+	getch();
+}
 
 char menuListarDados(){
 	
@@ -243,7 +258,8 @@ char menuListarDados(){
 	printf("\n[1] Informacoes do album");
 	printf("\n[2] Album e musicas");
 	printf("\n[3] Albuns por genero");
-	//printf("\n[4] Listar tudo");
+	printf("\n[4] Listar tudo");
+	printf("\n[5] Listagem inteligente (coming soon ;-)");
 	printf("\n[ESC] Finalizar\n");
 	
 	
@@ -301,6 +317,10 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 				if(flag >= 0)
 					listarAlbumGenero(estruAm, tamLgc, nome);
 				break;
+			case '4' : 
+				printf("LISTAR TUDO");
+				listarTudo(estruAm, tamLgc);
+				//break;
 		}
 		
 	}while(opc != 27);
