@@ -21,7 +21,7 @@ struct albumMusical{
 	int anoLanc, QtdeMusicas;
 };
 
-int buscaAlbum(struct albumMusical *estruAm, int &tamLgc, char *nome){
+int buscaAlbum(albumMusical estruAm[], int &tamLgc, char nome[]){
 	
 	int i = 0;
 	while(i < tamLgc && stricmp(nome, estruAm[i].nomeAlbum) != 0)
@@ -38,7 +38,7 @@ bool musicasTaCheio(int tamLgc){
 	return tamLgc < MAX_SONGS;
 }
 
-void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
+void lerMusicas(albumMusical estruAm[], int &tamLgc, int &i){
 	
 	
 	printf("%d Musica: ", i + 1);
@@ -55,7 +55,7 @@ void lerMusicas(struct albumMusical *estruAm, int &tamLgc, int &i){
 				printf("Limite de musicas excedido\n");
 }
 
-int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
+int inserirMusicas(albumMusical estruAm[], int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR]; //Modularizavel(1)
@@ -72,7 +72,7 @@ int inserirMusicas(struct albumMusical *estruAm, int &tamLgc){
 	return 2; //achoum, tem espaco e inseriu
 }
 ///						estrutura				album
-int buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic, char *nome){
+int buscaMusica(albumMusical estruAm[], int pos, int &tamLgcMusic, char nome[]){
 	
 	int i = 0;
 	while(i < tamLgcMusic && stricmp(nome, estruAm[pos].musicas[i]) != 0)
@@ -83,7 +83,7 @@ int buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic, char *n
 	return -1; //Nao encontrou
 }
 
-int buscaGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
+int buscaGenero(albumMusical estruAm[], int &tamLgc, char nome[]){
 	
 	int i = 0;
 	while(i < tamLgc && stricmp(nome, estruAm[i].genero) != 0)
@@ -94,7 +94,7 @@ int buscaGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
 	return -1; //Nao encontrou
 }
 
-char menuAlterar(struct albumMusical *estruAm, int pos){
+char menuAlterar(albumMusical estruAm[], int pos){
 	
 	clrscr();
 	printf("ESTROBOS'S SOM DASHBOARD (Alterar)\n");
@@ -108,7 +108,7 @@ char menuAlterar(struct albumMusical *estruAm, int pos){
 	
 	return toupper(getch());	
 }
-int alterarDados(struct albumMusical *estruAm, int &tamLgc){
+int alterarDados(albumMusical estruAm[], int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR], opc; //Modularizavel(1)
@@ -182,7 +182,7 @@ int alterarDados(struct albumMusical *estruAm, int &tamLgc){
 	getch();
 }
 
-void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
+void cadastraNovoAlbum(albumMusical estruAm[], int &tamLgc){
 	
 	char nome[MAX_STR];
 	
@@ -222,7 +222,7 @@ void cadastraNovoAlbum(struct albumMusical *estruAm, int &tamLgc){
 		printf("\nLimite atingido");
 	getch();
 }
-void listarAlbum(struct albumMusical *estruAm, int &pos){
+void listarAlbum(albumMusical estruAm[], int &pos){
 	
 	printf("Ano de Lancamento: %d", estruAm[pos].anoLanc);
 	printf("\nNome do Artista: %s", estruAm[pos].artista);
@@ -230,20 +230,20 @@ void listarAlbum(struct albumMusical *estruAm, int &pos){
 	printf("\nQuantidade de Musicas: %d", estruAm[pos].QtdeMusicas);
 	getch();
 }
-void listarAlbumMusica(struct albumMusical *estruAm, int &pos){
+void listarAlbumMusica(albumMusical estruAm[], int &pos){
 	
 	for (int i = 0; i < estruAm[pos].QtdeMusicas; i++)
 		printf("\n%d %s", i + 1, estruAm[pos].musicas[i]);
 	getch();
 }
-void listarAlbumGenero(struct albumMusical *estruAm, int &tamLgc, char *nome){
+void listarAlbumGenero(albumMusical estruAm[], int &tamLgc, char nome[]){
 	
 	for (int i = 0; i < tamLgc; i++)
 		if(!stricmp(estruAm[i].genero, nome))
 			printf("\n%d %s - Genero: %s", i + 1, estruAm[i].nomeAlbum, estruAm[i].genero);
 	getch();
 }
-void listarTudo(struct albumMusical *estruAm, int &tamLgc){
+void listarTudo(albumMusical estruAm[], int &tamLgc){
 	
 	for(int i = 0; i < tamLgc; i++){
 		printf("\n\nAlbum: %s", estruAm[i].nomeAlbum);
@@ -274,7 +274,7 @@ char menuListarDados(){
 	return toupper(getch());
 }
 
-int listarDados(struct albumMusical *estruAm, int &tamLgc){
+int listarDados(albumMusical estruAm[], int &tamLgc){
 	
 	char nome[MAX_STR], opc;
 	int pos, flag;
@@ -338,7 +338,6 @@ int listarDados(struct albumMusical *estruAm, int &tamLgc){
 }
 
 char menu(void){
-	
 	clrscr();
 	printf("ESTROBOS'S SOM DASHBOARD\n");
 	printf("\n[1] Cadastrar Novo Album");
