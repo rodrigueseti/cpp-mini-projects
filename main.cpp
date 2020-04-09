@@ -94,6 +94,16 @@ int buscaGenero(albumMusical estruAm[], int &tamLgc, char nome[]){
 	return -1; //Nao encontrou
 }
 
+void excluirAlbum(albumMusical estruAm[], int &tamLgc, int pos){
+	
+	tamLgc--;
+	for(int i = pos; i < tamLgc; i++)
+		estruAm[i] = estruAm[i+1];
+		
+	printf("Album deletado");
+	getch();
+}
+
 char menuAlterar(albumMusical estruAm[], int pos){
 	
 	clrscr();
@@ -108,6 +118,58 @@ char menuAlterar(albumMusical estruAm[], int pos){
 	
 	return toupper(getch());	
 }
+
+char menuExcluir(){
+	
+	clrscr();
+	printf("ESTROBOS'S SOM DASHBOARD (Excluir)\n");
+	printf("\n[1] Excluir album completo");
+	printf("\n[2] Excluir Musicas");
+	//printf("\n[3] Excluir Tudo");
+	
+	return toupper(getch());
+}
+
+int excluirDados(albumMusical estruAm[], int &tamLgc){
+	
+	char nome[MAX_STR], opc;
+	int pos;
+	
+	if(tamLgc <= 0)
+		return 1;
+		
+	do{
+		
+		opc = menuExcluir();
+		
+		clrscr();
+		
+		switch(opc) {
+			
+			case '1' :
+				printf("Excluir album completo\nNome do album: ");
+				
+				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
+				
+				if(pos == -1){
+					printf("Album nao encontrado");
+					getch();
+					break;
+				}
+				
+				excluirAlbum(estruAm, tamLgc, pos);
+				break;
+			
+			//case '2' :
+			//	printf("Deletar musicas");
+				
+		}
+		
+	}while(opc != 27);
+	
+	return 0;
+}
+
 int alterarDados(albumMusical estruAm[], int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
@@ -115,7 +177,7 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 	//fflush(stdin);
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome)), posMusic;
 	
-	if(pos < 0) //Se entrar no If n�o encontrou album para alterar dados
+	if(pos < 0) //Se entrar no If nao encontrou album para alterar dados
 		return 0;
 	
 	do{
@@ -181,6 +243,8 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 	
 	getch();
 }
+
+
 
 void cadastraNovoAlbum(albumMusical estruAm[], int &tamLgc){
 	
@@ -259,6 +323,7 @@ void listarTudo(albumMusical estruAm[], int &tamLgc){
 	}
 	getch();
 }
+
 
 char menuListarDados(){
 	
@@ -344,6 +409,7 @@ char menu(void){
 	printf("\n[1] Cadastrar Novo Album");
 	printf("\n[2] Inserir Musicas");
 	printf("\n[3] Alterar Dados");
+	printf("\n[4] Excluir Dados");
 	printf("\n[5] Listar Dados");
 	printf("\n[ESC] Finalizar\n");
 	
@@ -389,6 +455,13 @@ int main(){
 					printf("Album nao encontrado ");
 				printf("Finalizado");
 				getch();
+				break;
+			case '4' :
+				if(excluirDados(estruAm, albumQtde)){
+					printf("Sem dados para deletar");
+					getch();
+				}
+					
 				break;
 			case '5' :
 				if(!listarDados(estruAm, albumQtde)){
