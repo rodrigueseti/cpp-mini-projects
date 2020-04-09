@@ -21,7 +21,7 @@ struct albumMusical{
 	int anoLanc, QtdeMusicas;
 };
 
-int buscaAlbum(albumMusical estruAm[], int &tamLgc, char nome[]){
+int buscaAlbum(albumMusical estruAm[], int tamLgc, char nome[]){
 	
 	int i = 0;
 	while(i < tamLgc && stricmp(nome, estruAm[i].nomeAlbum) != 0)
@@ -230,17 +230,18 @@ void listarAlbum(albumMusical estruAm[], int &pos){
 	printf("\nQuantidade de Musicas: %d", estruAm[pos].QtdeMusicas);
 	getch();
 }
-void listarAlbumMusica(albumMusical estruAm[], int &pos){
+void listarAlbumMusica(albumMusical estruAm[], int pos){
 	
 	for (int i = 0; i < estruAm[pos].QtdeMusicas; i++)
 		printf("\n%d %s", i + 1, estruAm[pos].musicas[i]);
+		
 	getch();
 }
 void listarAlbumGenero(albumMusical estruAm[], int &tamLgc, char nome[]){
 	
 	for (int i = 0; i < tamLgc; i++)
 		if(!stricmp(estruAm[i].genero, nome))
-			printf("\n%d %s - Genero: %s", i + 1, estruAm[i].nomeAlbum, estruAm[i].genero);
+			printf("\n%d %s, Genero: %s", i + 1, estruAm[i].nomeAlbum, estruAm[i].genero);
 	getch();
 }
 void listarTudo(albumMusical estruAm[], int &tamLgc){
@@ -311,7 +312,7 @@ int listarDados(albumMusical estruAm[], int &tamLgc){
 					getch();
 				}
 				if(pos >= 0)
-					listarAlbumMusica(estruAm, tamLgc);
+					listarAlbumMusica(estruAm, pos);
 				break;
 			case '3' :
 				
