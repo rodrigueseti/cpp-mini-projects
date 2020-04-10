@@ -326,7 +326,6 @@ void cadastraNovoAlbum(albumMusical estruAm[], int &tamLgc){
 	if(albumTaCheio(tamLgc)){ 
 		
 		printf("\nNome do Album: ");
-		//fflush(stdin);
 		gets(nome);
 		
 		if(buscaAlbum(estruAm, tamLgc, nome) == -1){ // se buscaAlbum retornar falso ja existe, entao nao cadastra
@@ -340,7 +339,6 @@ void cadastraNovoAlbum(albumMusical estruAm[], int &tamLgc){
 			gets(estruAm[tamLgc].artista);
 			
 			printf("Genero: ");
-			//fflush(stdin);
 			gets(estruAm[tamLgc].genero);
 			
 			printf("\nMusicas (Enter para sair)\n");
@@ -408,7 +406,6 @@ char menuListarDados(){
 	printf("\n[5] Listagem inteligente (coming soon ;-)");
 	printf("\n[ESC] Finalizar\n");
 	
-	
 	return toupper(getch());
 }
 
@@ -441,7 +438,6 @@ int listarDados(albumMusical estruAm[], int &tamLgc){
 			case '2' :
 				printf("ALBUM E MUSICAS");
 				printf("\nNome do album: ");
-				//fflush(stdin);
 				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 				
 				if(pos == -1){
@@ -455,7 +451,6 @@ int listarDados(albumMusical estruAm[], int &tamLgc){
 				
 				printf("ALBUNS POR GENERO");
 				printf("\nGenero: ");
-				//fflush(stdin);
 				flag = buscaGenero(estruAm, tamLgc, gets(nome));
 				
 				if(flag == -1){
@@ -468,7 +463,6 @@ int listarDados(albumMusical estruAm[], int &tamLgc){
 			case '4' : 
 				printf("LISTAR TUDO");
 				listarTudo(estruAm, tamLgc);
-				//break;
 		}
 		
 	}while(opc != 27);
@@ -483,10 +477,16 @@ char menu(void){
 	printf("\n[3] Alterar Dados");
 	printf("\n[4] Excluir Dados");
 	printf("\n[5] Listar Dados");
+	printf("\n[6] Estatisticas");
 	printf("\n[ESC] Finalizar\n");
 	
 	return toupper(getch());	
 }
+
+int estatistica(albumMusical estruAm[], int &tamLgc){
+	
+}
+
 
 int main(){
 	
@@ -539,7 +539,9 @@ int main(){
 					printf("Nada para listar");
 					getch();
 				}
-					
+				break;
+				
+			case '6' :
 				break;
 			case 27 :
 				
