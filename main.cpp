@@ -37,6 +37,12 @@ bool albumTaCheio(int tamLgc){
 bool musicasTaCheio(int tamLgc){
 	return tamLgc < MAX_SONGS;
 }
+bool existeMusica(int tamLgcMusic){
+	return tamLgcMusic > 0;
+}
+bool existeAlbum(int tamLgc){
+	return tamLgc > 0;
+}
 
 void lerMusicas(albumMusical estruAm[], int &tamLgc, int &i){
 	
@@ -94,6 +100,7 @@ int buscaGenero(albumMusical estruAm[], int &tamLgc, char nome[]){
 	return -1; //Nao encontrou
 }
 
+
 void excluirAlbum(albumMusical estruAm[], int &tamLgc, int pos){
 	
 	tamLgc--;
@@ -102,6 +109,59 @@ void excluirAlbum(albumMusical estruAm[], int &tamLgc, int pos){
 		
 	printf("Album deletado");
 	getch();
+}
+void listarAlbumMusica(albumMusical estruAm[], int pos);
+
+char menuDinamico(albumMusical estruAm[], int pos, int i){
+	
+	clrscr();
+	printf("Nome do album: %s", estruAm[pos].nomeAlbum);
+	printf("\n[Cetra para baixo] proxima musica");
+	printf("\n[Cetra para cima] musica anterior");
+	printf("\n[DEL] Deletar musica");
+	printf("\n[ESC] Finalizar\n");
+	printf("\n%d %s", i + 1, estruAm[pos].musicas[i]);
+	
+	return toupper(getch());
+}
+
+void deletarMusica(albumMusical estruAm[], int pos, int &posMusic){
+	
+	estruAm[pos].QtdeMusicas--;
+	for(int i = posMusic; i < estruAm[pos].QtdeMusicas; i++)
+		strcpy(estruAm[pos].musicas[i], estruAm[pos].musicas[i + 1]);
+	
+	posMusic != 0 && posMusic == estruAm[pos].QtdeMusicas ? posMusic-- : NULL;
+}
+
+int excluirMusicas(albumMusical estruAm[], int pos){
+	
+	char opc;
+	int i = 0;
+	
+	do{
+		opc = menuDinamico(estruAm, pos, i);
+		
+		switch(opc){
+			
+			case 72 :
+				if(i > 0)
+					i--;
+				break;
+			
+			case 80 :
+				if(i < estruAm[pos].QtdeMusicas - 1)
+					i++;
+				break;
+				
+			case 83 : 
+				deletarMusica(estruAm, pos, i);
+				break;
+		}
+		
+	}while(opc != 27 && existeMusica(estruAm[pos].QtdeMusicas)); //Condicao quando zerar musicas
+	
+	return existeMusica(estruAm[pos].QtdeMusicas);
 }
 
 char menuAlterar(albumMusical estruAm[], int pos){
@@ -126,6 +186,7 @@ char menuExcluir(){
 	printf("\n[1] Excluir album completo");
 	printf("\n[2] Excluir Musicas");
 	//printf("\n[3] Excluir Tudo");
+	printf("\n[ESC] Retornar");
 	
 	return toupper(getch());
 }
@@ -160,13 +221,32 @@ int excluirDados(albumMusical estruAm[], int &tamLgc){
 				excluirAlbum(estruAm, tamLgc, pos);
 				break;
 			
-			//case '2' :
-			//	printf("Deletar musicas");
+			case '2' :
+				printf("Deletar Musicas\nNome do album: ");
 				
+				pos = buscaAlbum(estruAm, tamLgc, gets(nome));
+				
+				if(pos == -1){
+					printf("Album nao encontrado");
+					getch();
+					break;
+				}
+				
+				if(!existeMusica(estruAm[pos].QtdeMusicas)){
+					printf("Album sem musica");
+					getch();
+					break;
+				}
+				if(!excluirMusicas(estruAm, pos)){
+					clrscr();
+					printf("Sem musicas");
+					getch();
+				}
 		}
 		
-	}while(opc != 27);
+	}while(opc != 27 && existeAlbum(tamLgc));
 	
+	// Implementar aviso de todos as informacoes deletadas
 	return 0;
 }
 
@@ -461,7 +541,6 @@ int main(){
 					printf("Sem dados para deletar");
 					getch();
 				}
-					
 				break;
 			case '5' :
 				if(!listarDados(estruAm, albumQtde)){
