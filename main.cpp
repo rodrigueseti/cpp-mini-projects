@@ -7,14 +7,6 @@
 #define MAX_SONGS 4	//Seta a quantidade maxima de musicacas em cada album
 #define MAX_STR 50 //Seta o tamanho total de uma palavra
 
-//VERSAO MASTER
-
-/*
-	TAREFAS
-	
-	Modularizar nome do album
-*/
-
 struct albumMusical{
 	
 	char nomeAlbum[MAX_STR], musicas[MAX_SONGS][MAX_STR], artista[MAX_STR], genero[MAX_STR];
@@ -159,7 +151,7 @@ int excluirMusicas(albumMusical estruAm[], int pos){
 				break;
 		}
 		
-	}while(opc != 27 && existeMusica(estruAm[pos].QtdeMusicas)); //Condicao quando zerar musicas
+	}while(opc != 27 && existeMusica(estruAm[pos].QtdeMusicas));
 	
 	return existeMusica(estruAm[pos].QtdeMusicas);
 }
