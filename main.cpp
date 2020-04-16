@@ -50,26 +50,25 @@ void lerMusicas(albumMusical estruAm[], int &tamLgc, int &i){
 			printf("%d Musica: ", i + 1);
 	}
 	if(!musicasTaCheio(i))
-				printf("Limite de musicas excedido\n");
+		printf("Limite de musicas excedido\n");
 }
 
 int inserirMusicas(albumMusical estruAm[], int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR]; //Modularizavel(1)
-	//fflush(stdin);
+	
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome));
 	if(pos < 0) // se buscaAlbum retornar falso e porque encontrou album para inserir musicas.
 		return 0; // 0 Nao encontrou album para inserir
 	
-	// (2) TALVEZ HA UMA REDUNDANCIA
 	if(!musicasTaCheio(estruAm[pos].QtdeMusicas))
 		return 1; // 1 Quando nao cabe musicas
 	
 	lerMusicas(estruAm, tamLgc, estruAm[pos].QtdeMusicas);
 	return 2; //achoum, tem espaco e inseriu
 }
-///						estrutura				album
+
 int buscaMusica(albumMusical estruAm[], int pos, int &tamLgcMusic, char nome[]){
 	
 	int i = 0;
@@ -238,7 +237,6 @@ int excluirDados(albumMusical estruAm[], int &tamLgc){
 		
 	}while(opc != 27 && existeAlbum(tamLgc));
 	
-	// Implementar aviso de todos as informacoes deletadas
 	return 0;
 }
 
@@ -246,7 +244,6 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 	
 	printf("\nNome do Album: "); //Modularizavel(1)
 	char nome[MAX_STR], opc; //Modularizavel(1)
-	//fflush(stdin);
 	int pos = buscaAlbum(estruAm, tamLgc, gets(nome)), posMusic;
 	
 	if(pos < 0) //Se entrar no If nao encontrou album para alterar dados
@@ -259,7 +256,6 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 			case '1' :
 				printf("Alterar nome do album");
 				printf("\nNovo nome: ");
-				//fflush(stdin);
 				if(buscaAlbum(estruAm, tamLgc, gets(nome)) >= 0)
 					printf("\nNome ja existe");
 				else{ strcpy(estruAm[pos].nomeAlbum, nome);
@@ -283,7 +279,6 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 				break;
 			case '4' :
 				printf("Alterar Genero Musical\nNome do artista: ");
-				//fflush(stdin);
 				strcpy(estruAm[pos].genero, gets(nome));
 				printf("Alterado");
 				getch();
@@ -291,12 +286,9 @@ int alterarDados(albumMusical estruAm[], int &tamLgc){
 			case '5' :
 				printf("Alterar Musica\nNome: ");
 				
-				//  buscaMusica(struct albumMusical *estruAm, int pos, int &tamLgcMusic)
-				//fflush(stdin);
 				posMusic = buscaMusica(estruAm, pos, estruAm[pos].QtdeMusicas, gets(nome));
 				if(posMusic >= 0){
 					printf("Novo nome: ");
-					//fflush(stdin);
 					gets(estruAm[pos].musicas[posMusic]);
 					printf("Alterado");
 				}
@@ -322,7 +314,6 @@ void cadastraNovoAlbum(albumMusical estruAm[], int &tamLgc){
 	
 	char nome[MAX_STR];
 	
-	// If verifica se ha capacidade no vetor de structs
 	if(albumTaCheio(tamLgc)){ 
 		
 		printf("\nNome do Album: ");
@@ -409,6 +400,18 @@ char menuListarDados(){
 	return toupper(getch());
 }
 
+char menuEstatistica(){
+	
+	clrscr();
+	printf("ESTROBOS'S SOM DASHBOARD (Estatistica)\n");
+	printf("\n[1] Qual musica mais gravada");
+	//printf("\n[2] Qual autor que mais gravou albuns");
+	//printf("\n[3] Qual ano com mais lancementos");
+	//printf("\n[4] Media de musicas gravadas por album");
+	
+	return toupper(getch());
+}
+
 int listarDados(albumMusical estruAm[], int &tamLgc){
 	
 	char nome[MAX_STR], opc;
@@ -483,8 +486,26 @@ char menu(void){
 	return toupper(getch());	
 }
 
-int estatistica(albumMusical estruAm[], int &tamLgc){
+int estatistica(albumMusical estruAm[], int tamLgc){
 	
+	char opc;
+	
+	//if()//continuar
+	
+	do{
+		opc = menuEstatistica();
+		
+		clrscr();
+		
+		switch(opc){
+			case '1' : 
+			
+			
+			break;
+		}
+		
+		
+	}while(opc != 27);
 }
 
 
@@ -521,11 +542,11 @@ int main(){
 				break;
 				
 			case '3' :
-				
-				printf("Alterar Dados");
-				if(!alterarDados(estruAm, albumQtde))
+				if(!alterarDados(estruAm, albumQtde)){
+					textcolor(10);
+					gotoxy(38,31);
 					printf("Album nao encontrado ");
-				printf("Finalizado");
+				}
 				getch();
 				break;
 			case '4' :
@@ -542,15 +563,10 @@ int main(){
 				break;
 				
 			case '6' :
+				estatistica(estruAm, albumQtde);
 				break;
 			case 27 :
-				
 				printf("Fim");
-				break;
-				
-			default:
-				printf("Invalid Input");
-				
 		}
 	}while(opc != 27);
 	
