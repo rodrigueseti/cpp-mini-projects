@@ -1,9 +1,9 @@
 #include <stdio.h> // Input Output
 #include <ctype.h> // toupper();
-#include <conio.h>
+//#include <conio.h>
 #include <conio2.h> // clrscr(), textcolor(), getche();
 #include <string.h> // stricmp();
-#include <windows.h> // Sleep();
+#include <windows.h> // Sleep();, system("cls");
 
 #define COR_TITULO		   BLACK
 #define COR_FUNDO_TITULO   LIGHTGRAY 
@@ -18,7 +18,7 @@
 #define COR_ALUNO 		   BLUE
 #define COR_DIS			   BLUE
 #define COR_NOTA           BLUE
-#define COR_REL            BLACK
+#define COR_REL            BLUE
 
 struct tpAluno {
 	
@@ -49,6 +49,7 @@ void desenharLayout(int altura = 30);
 void clrTittle();
 void clrCorpo();
 void clrRodape(int altura = 29);
+void clearkeybuf (void);
 
 void criaArquivos(void);
 
@@ -342,21 +343,30 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 	tpDis regDis;
 	tpNotas regNota;
 	
-	int pos;
+	int pos, posY = 6, posX = 4;
 	
 	FILE *ptrAlu = fopen(nomeAlu, "rb");
 	FILE *ptrDis = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
 	
-	clrscr();
-	printf("DISCIPLINAS E ALUNOS\n");
-	
 	fread(&regDis, sizeof(tpDis), 1, ptrDis);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	
-	if(feof(ptrNota))
-		printf("Sem registros");
-	else
+	if(feof(ptrNota)){
+		clrRodape();
+		gotoxy(53, 29); printf("SEM REGISTROS!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+	}
+	else{
+		
+		clrTittle();
+		gotoxy(54, 3); printf("DISCIPLINAS E ALUNOS");
+		gotoxy(48, 4); printf("(Busca Exustiva)");
+		
+		clrCorpo();
+		textcolor(COR_NOTA);
 		while(!feof(ptrDis))
 		{
 			while(!feof(ptrNota) && (regDis.disCod != regNota.notaDisCod || regNota.status == 0))
@@ -364,7 +374,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 			
 			if(!feof(ptrNota))
 			{
-				printf("\nDISCIPLINA: %s", regDis.disNome);
+				gotoxy(posX, posY++); printf("DISCIPLINA: %s", regDis.disNome);
 				
 				fseek(ptrNota, 0, SEEK_SET);
 				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
@@ -379,19 +389,25 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 						
 						fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 						
-						printf("\nNOME: %s", regAlu.aluNome);
+						gotoxy(posX, posY++); printf("NOME: %s", regAlu.aluNome);
 					}
 					fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 				}
-				printf("\n");
+				posY++;
 			}
 			fseek(ptrNota, 0, SEEK_SET);
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
 		}
+		clrRodape();
+		gotoxy(53, 29); printf("PRONTO!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+		getch();
+	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
-	getch();
 }
 
 void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
@@ -401,29 +417,42 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 	tpDis regDis;
 	tpNotas regNota;
 	
-	int pos;
+	int pos, posY = 6, posX = 4;
 	
 	FILE *ptrAlu = fopen(nomeAlu, "rb");
 	FILE *ptrDis = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
 	
-	clrscr();
-	printf("ALUNOS E DISCIPLINAS\n");
-	
+	//clrscr();
 	fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	
-	if(feof(ptrNota))
-		printf("Sem registros");
-	else
-		while(!feof(ptrAlu))
-		{
+	if(feof(ptrNota)){
+		
+		clrRodape();
+		gotoxy(53, 29); printf("SEM REGISTROS!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+	}
+	else{
+		
+		clrTittle();
+		gotoxy(54, 3); printf("ALUNOS E DISCIPLINAS");
+		gotoxy(48, 4); printf("(BUSCA EXAUSTIVA)");
+		
+		clrCorpo();
+		textcolor(COR_REL);
+		while(!feof(ptrAlu)) {
+			
 			while(!feof(ptrNota) && (stricmp(regAlu.aluRa, regNota.notaRa) || regNota.status == 0))
 				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 			
+			
+			
 			if(!feof(ptrNota))
 			{
-				printf("\nNOME: %s", regAlu.aluNome);
+				gotoxy(posX, posY++); printf("NOME: %s", regAlu.aluNome);
 				
 				fseek(ptrNota, 0, SEEK_SET);
 				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
@@ -437,19 +466,26 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 						fseek(ptrDis, pos, SEEK_SET);
 						fread(&regDis, sizeof(tpDis), 1, ptrDis);
 						
-						printf("\nDisciplina: %s", regDis.disNome);
+						gotoxy(posX, posY++); printf("DISCIPLINA: %s", regDis.disNome);
 					}
 					fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 				}
-				printf("\n");
+				posY++;
 			}
+			
 			fseek(ptrNota, 0, SEEK_SET);
 			fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 		}
+		clrRodape();
+		gotoxy(53, 29); printf("PRONTO!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+		getch();
+	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
-	getch();
 }
 
 void mediaDisciplinas(char nomeDis[], char nomeNota[])
@@ -458,50 +494,69 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 	tpNotas regNota;
 	float soma;
 	int cont;
+	int pos, posY = 6, posX = 4;
 	
 	FILE *ptrDis = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
 	
-	clrscr();
-	printf("DISCIPLINAS COM MEDIA [<6]\n");
+	//clrscr();
 	
 	fread(&regDis, sizeof(tpDis), 1, ptrDis);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	
-	if(feof(ptrDis) || feof(ptrNota))
-		printf("Sem registros");
+	if(feof(ptrDis) || feof(ptrNota)){
+		clrRodape();
+		gotoxy(53, 29); printf("SEM REGISTROS!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+	}else{
 		
-	while(!feof(ptrDis) && !feof(ptrNota))
-	{
-		soma = 0;
-		cont = 0;
+		clrTittle();
+		gotoxy(54, 3); printf("DISCIPLINAS COM MEDIA [<6] - ALTERAR DINAMICA DO LAYOUT");
+		gotoxy(48, 4); printf("BUSCA EXAUSTIVA");
 		
-		while(!feof(ptrNota))
+		
+		clrCorpo();
+		textcolor(COR_REL);
+		while(!feof(ptrDis) && !feof(ptrNota))
 		{
-			if(regNota.status == 1 && regDis.disCod == regNota.notaDisCod )
+			soma = 0;
+			cont = 0;
+			
+			while(!feof(ptrNota))
 			{
-				soma = soma + regNota.nota;
-				cont++;
+				if(regNota.status == 1 && regDis.disCod == regNota.notaDisCod )
+				{
+					soma = soma + regNota.nota;
+					cont++;
+				}
+				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 			}
+			
+			
+			soma = soma / (float) cont;
+			
+			if(cont > 0 && soma < 6)
+			{
+				gotoxy(posX, posY);      printf("COD.: %d", regDis.disCod);
+				gotoxy(posX + 20, posY); printf("DIS.: %s", regDis.disNome);	
+				gotoxy(posX + 40, posY++); printf("MEDIA GERAL: %.2f", soma);
+			}
+			fread(&regDis, sizeof(tpDis), 1, ptrDis);
+			
+			fseek(ptrNota, 0, SEEK_SET);
 			fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 		}
-		
-		soma = soma / (float) cont;
-		
-		if(cont > 0 && soma < 6)
-		{
-			printf("\nCodigo: %d", regDis.disCod);
-			printf("\nDisciplina: %s", regDis.disNome);	
-			printf("\nMedia Geral: %.2f\n", soma);
-		}
-		fread(&regDis, sizeof(tpDis), 1, ptrDis);
-		
-		fseek(ptrNota, 0, SEEK_SET);
-		fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+		clrRodape();
+		gotoxy(53, 29); printf("PRONTO!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+		getch();	
 	}
 	fclose(ptrDis);
-	fclose(ptrNota);
-	getch();
+	fclose(ptrNota);	
 }
 
 
@@ -535,8 +590,6 @@ void listagemPorIncial(char nomeArq[])
 		textcolor(COR_REL);
 		gotoxy(posX, posY++); printf("LETRA: ");
 		c = toupper(getche());
-		
-		
 		
 		while(!feof(ptrAlu))
 		{
@@ -1830,6 +1883,7 @@ void relAlunos(char nomeArq[]) {
 		
 		if(regSize > 22)
 		{	
+			textbackground(BLACK);
 			system("cls");
 			desenharLayout(30 + (regSize - 22));
 		}
@@ -2237,7 +2291,7 @@ char menu(void)
 	/*textbackground(COR_FUNDO_TITULO);
 	textcolor(COR_TITULO);*/
 	gotoxy(43, 3); printf("CADASTRO ALUNOS DISCIPLINAS E NOTAS");
-	gotoxy(35, 4);  printf("Encoded by: Victor Taveira - github.com/taveiradev");
+	gotoxy(35, 4); printf("Encoded by: Victor Taveira - github.com/taveiradev");
 	
 	short int posY = 9, posX = 20;
 	
