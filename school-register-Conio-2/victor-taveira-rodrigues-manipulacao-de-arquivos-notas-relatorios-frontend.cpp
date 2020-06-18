@@ -7,7 +7,7 @@
 
 #define COR_TITULO		   BLACK
 #define COR_FUNDO_TITULO   LIGHTGRAY 
-#define COR_MOLDURA_TITULO GREEN		
+#define COR_MOLDURA_TITULO RED		
 
 #define COR_FUNDO_CORPO    WHITE     
 #define COR_MOLDURA_CORPO  RED       
@@ -18,7 +18,7 @@
 #define COR_ALUNO 		   BLUE
 #define COR_DIS			   BLUE
 #define COR_NOTA           BLUE
-#define COR_REL            BLUE
+#define COR_REL            BLACK
 
 struct tpAluno {
 	
@@ -508,33 +508,101 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 
 void listagemPorIncial(char nomeArq[])
 {
+	//F Completo
 	tpAluno regAlu;
+	int cont = 0, posY = 6, posX = 4;
 	char c;
 	
 	FILE *ptrAlu = fopen(nomeArq, "rb");
 	
-	clrscr();
-	printf("BUSCA POR INICIAL");
-	
 	fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 	
 	if(feof(ptrAlu)){
-		printf("\nSem registros");
+		
+		clrRodape();
+		gotoxy(53, 29); printf("SEM REGISTROS!");
+		Sleep(1500);
+		clrRodape();
+		clearkeybuf();
+		
 	}else{
-		printf("\nLetra: ");
+		
+		clrTittle();
+		gotoxy(54, 3); printf("BUSCA POR INICIAL");
+		gotoxy(48, 4); printf("(VARREDURA - EXAUSTIVA)");
+		
+		clrCorpo();
+		textcolor(COR_REL);
+		gotoxy(posX, posY++); printf("LETRA: ");
 		c = toupper(getche());
-		printf("\n");
-	}
-	
-	while(!feof(ptrAlu))
-	{
-		if(toupper(regAlu.aluNome[0]) == c)
-			printf("\nNome: %s \t\t R.A.: %s", regAlu.aluNome, regAlu.aluRa);	
+		
+		
+		
+		while(!feof(ptrAlu))
+		{
+			if(toupper(regAlu.aluNome[0]) == c)
+				cont++;
+				
+			fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);	
+		}
+		if(cont > 0){
+			if(cont > 21)
+			{	
+				textbackground(BLACK);
+				system("cls");
+				desenharLayout(30 + (cont - 21));
+				
+				clrTittle();
+				gotoxy(54, 3); printf("BUSCA POR INICIAL %d", cont);
+				gotoxy(48, 4); printf("(VARREDURA - EXAUSTIVA)");
+				
+				textbackground(COR_FUNDO_CORPO);
+				textcolor(COR_REL);
+				gotoxy(posX, 6); printf("LETRA: %c", c);
+			}
 			
-		fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);	
+			fseek(ptrAlu, 0, SEEK_SET);
+			fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
+			while(!feof(ptrAlu))
+			{
+				if(toupper(regAlu.aluNome[0]) == c){
+					gotoxy(posX, posY++); printf("NOME: %s", regAlu.aluNome);
+				}
+				fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);	
+			}
+			
+			if(cont > 21)
+			{
+				posY = 30 + (cont - 22);
+				clrRodape(posY);
+				gotoxy(53, posY); printf("PRONTO!");
+				Sleep(1500);
+				clrRodape(posY);	
+			}
+			else{
+				clrRodape();
+				gotoxy(53, 29); printf("PRONTO!");
+				Sleep(1500);
+				clrRodape();
+			}
+			clearkeybuf();
+			getch();
+			
+		}else{
+			
+			clrRodape();
+			gotoxy(53, 29); printf("NAO ENCONTRADO!");
+			Sleep(1500);
+			clrRodape();
+		}
+		
+		if(cont > 21){
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout();
+		}
 	}
 	fclose(ptrAlu);
-	getch();
 }
 
 void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
@@ -589,7 +657,7 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(48, 4); printf("(BUSCA EXAUSTIVA - EXAUSTIVA)");
 		
 		clrCorpo();
-		textcolor(COR_NOTA);
+		textcolor(COR_REL);
 		
 		while(!feof(ptrNota))
 		{
@@ -613,7 +681,7 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
 				gotoxy(posX, posY);      printf("SITUACAO: ");
 				textcolor(RED); 
 				gotoxy(posX + 10, posY++); printf("REPROVADO");
-				textcolor(COR_NOTA);
+				textcolor(COR_REL);
 				posY++;
 			}
 			fread(&regNota, sizeof(tpNotas), 1, ptrNota);
@@ -708,15 +776,6 @@ int buscaBinariaDis(FILE *ptrDis, int codAux)
 	int start = 0, end = ftell(ptrDis) / sizeof(tpDis) - 1, mid;
 	mid = end / 2;
 	
-	/*printf("\n\nFtell (ptrDis): %d", ftell(ptrDis));
-	printf("\nSizeof (ptr): %d", sizeof(ptrDis));
-	printf("\nSizeof (tpDis): %d", sizeof(tpDis));
-	printf("\nCodAux: %d", codAux); 
-	printf("\nSTART: %d", start);
-	printf("\nMID: %d", mid);
-	printf("\nEND: %d\n\n", end);
-	getch();*/
-	
 	fseek(ptrDis, mid * sizeof(tpDis), SEEK_SET);
 	fread(&regDis, sizeof(tpDis), 1, ptrDis);
 	
@@ -746,10 +805,6 @@ int buscaBinariaAluno(FILE *ptrAluno, char nome[])
 	int start = 0;
 	int end = ftell(ptrAluno) / sizeof(tpAluno) - 1;
 	int mid = end / 2;
-	
-	/*printf("\nMID: %d", mid);
-	printf("\nEND: %d", end);
-	getch();*/
 	
 	fseek(ptrAluno, mid * sizeof(tpAluno), SEEK_SET);
 	fread(&regMeio, sizeof(tpAluno), 1, ptrAluno);
@@ -1775,7 +1830,7 @@ void relAlunos(char nomeArq[]) {
 		
 		if(regSize > 22)
 		{	
-			clrscr();
+			system("cls");
 			desenharLayout(30 + (regSize - 22));
 		}
 		
@@ -1846,7 +1901,7 @@ void relNotas(char nomeArq[])
 		
 		if(regSize > 22)
 		{	
-			clrscr();
+			system("cls");
 			desenharLayout(30 + (regSize - 22));
 		}
 		
@@ -2124,11 +2179,9 @@ void cadastroAlunos(char nomeArq[]) {
 	
 	FILE *ptrAluno = fopen(nomeArq, "ab+");
 	
-	//clrscr();
 	clrTittle();
 	gotoxy(54, 3); printf("INSERIR ALUNO");
 	gotoxy(48, 4); printf("(INSERCAO SEM ORDENACAO)");
-	
 	
 	clrCorpo();
 	textcolor(COR_ALUNO);
@@ -2145,8 +2198,9 @@ void cadastroAlunos(char nomeArq[]) {
 			posY++;
 			clrRodape();
 			gotoxy(40, 29); printf("RA JA CADASTRADO, CADASTRO NAO EFETUADO!");
-			Sleep(1500);
+			//Sleep(1500);
 			clrRodape();
+			//clearkeybuf();
 		}
 		else{
 			gotoxy(posX + 18, posY++); printf("Nome: ");
@@ -2156,9 +2210,9 @@ void cadastroAlunos(char nomeArq[]) {
 			
 			clrRodape();
 			gotoxy(54, 29); printf("CADASTRO OK!");
-			Sleep(1500);
-			clearkeybuf();
+			//Sleep(1500);
 			clrRodape();
+			//clearkeybuf();
 		}
 		
 		if(!(posY < 28))
@@ -2203,7 +2257,7 @@ char menu(void)
 	
 	posY++;
 	textcolor(COR_DIS);
-	gotoxy(26, posY++); printf("DISCIPLINA");
+	gotoxy(26, posY++);   printf("DISCIPLINA");
 	posY++;
 	gotoxy(posX, posY++); printf("[H] INSERIR (CODIGO)");   
 	gotoxy(posX, posY++); printf("[I] RELATORIO");
@@ -2226,7 +2280,7 @@ char menu(void)
 	
 	textcolor(COR_REL);
 	posY += 2;
-	gotoxy(84, posY++); printf("RELATORIOS");
+	gotoxy(84, posY++);   printf("RELATORIOS");
 	posX = 76;
 	posY++;
 	gotoxy(posX, posY++); printf("[S] ALUNOS REPROVADOS");
