@@ -20,6 +20,8 @@
 #define COR_NOTA           BLUE
 #define COR_REL            BLUE
 
+#define CKB_SWITCH 1
+
 struct tpAluno {
 	
 	char aluRa[13], aluNome[40];
@@ -357,7 +359,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 	}
 	else{
 		
@@ -402,7 +404,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("PRONTO!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();
 	}
 	fclose(ptrAlu);
@@ -433,7 +435,7 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 	}
 	else{
 		
@@ -480,7 +482,7 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("PRONTO!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();
 	}
 	fclose(ptrAlu);
@@ -509,7 +511,7 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 	}else{
 		
 		clrTittle();
@@ -552,7 +554,7 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("PRONTO!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();	
 	}
 	fclose(ptrDis);
@@ -578,7 +580,7 @@ void listagemPorIncial(char nomeArq[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		
 	}else{
 		
@@ -638,7 +640,7 @@ void listagemPorIncial(char nomeArq[])
 				Sleep(1500);
 				clrRodape();
 			}
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			getch();
 			
 		}else{
@@ -680,7 +682,7 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 	}
 	else{
 		
@@ -750,7 +752,7 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
 			clrRodape(posY);	
 			
 		}
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();
 		
 		if(regSize * 7 > 22)
@@ -936,7 +938,7 @@ void ordenaAlunos(char nomeArq[])
 	clrRodape();
 	gotoxy(54, 29); printf("(NOME CRESCENTE) ORDENANDO ARQUIVO: %s...", nomeArq);
 	Sleep(1500);
-	clearkeybuf();
+	if(CKB_SWITCH) clearkeybuf();
 	
 	tpAluno regI, regJ;
 	FILE *ptrAlu = fopen(nomeArq, "rb+");
@@ -967,7 +969,7 @@ void ordenaAlunos(char nomeArq[])
 	clrRodape();
 	gotoxy(54, 29); printf("ARQUIVO ORDENADO!");
 	Sleep(1000);
-	clearkeybuf();
+	if(CKB_SWITCH) clearkeybuf();
 	clrRodape();
 	
 	fclose(ptrAlu);
@@ -1045,7 +1047,7 @@ void excFisAlunos(char nomeArq[]) {
 				clrRodape();
 				gotoxy(54, 29); printf("REGISTRO DELETADO, OK!");
 				Sleep(1500);
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
 			}
 			else{
@@ -1057,7 +1059,7 @@ void excFisAlunos(char nomeArq[]) {
 			clrRodape();
 			gotoxy(53, 29); printf("NAO ENCONTRADO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 	}
@@ -1117,7 +1119,7 @@ void excLogicaNotas(char nomeArq[])
 					gotoxy(54, 29); printf("REGISTRO DELETADO, OK!");
 					Sleep(1500);
 					clrRodape();
-					clearkeybuf();
+					if(CKB_SWITCH) clearkeybuf();
 				}
 				clrRodape();
 			}
@@ -1126,7 +1128,7 @@ void excLogicaNotas(char nomeArq[])
 				gotoxy(53, 29); printf("NAO ENCONTRADO!");
 				Sleep(1500);
 				clrRodape();
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 			}	
 		}
 		
@@ -1165,7 +1167,7 @@ void excFisicaNotas(char nomeArq[])
 	gotoxy(54, 29); printf("FEITO!");
 	Sleep(1000);
 	clrRodape();
-	clearkeybuf();
+	if(CKB_SWITCH) clearkeybuf();
 	
 }
 
@@ -1231,7 +1233,7 @@ void excFisDisciplina(char nomeArq[])
 				clrRodape();
 				gotoxy(54, 29); printf("REGISTRO DELETADO, OK!");
 				Sleep(1500);
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
 			}
 			else{
@@ -1243,7 +1245,7 @@ void excFisDisciplina(char nomeArq[])
 			clrRodape();
 			gotoxy(53, 29); printf("NAO ENCONTRADO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 	}
@@ -1307,7 +1309,7 @@ void altDis(char nomeArq[])
 				clrRodape();
 				gotoxy(54, 29); printf("ALTERADO!");
 				Sleep(1500);
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
 				
 				posY++;
@@ -1318,7 +1320,7 @@ void altDis(char nomeArq[])
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTROS!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		textbackground(COR_FUNDO_CORPO);
@@ -1393,7 +1395,7 @@ void altNotas(char nomeArq[])
 					gotoxy(54, 29); printf("ALTERADO!");
 					Sleep(1500);
 					clrRodape();
-					clearkeybuf();
+					if(CKB_SWITCH) clearkeybuf();
 					
 					posY++;
 				}
@@ -1405,7 +1407,7 @@ void altNotas(char nomeArq[])
 				gotoxy(53, 29); printf("SEM REGISTROS!");
 				Sleep(1500);
 				clrRodape();
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 			}	
 		}
 		textbackground(COR_FUNDO_CORPO);
@@ -1473,7 +1475,7 @@ void altAlunos(char nomeArq[]) {
 				clrRodape();
 				gotoxy(54, 29); printf("ALTERADO!");
 				Sleep(1500);
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
 				
 				posY++;
@@ -1484,7 +1486,7 @@ void altAlunos(char nomeArq[]) {
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTROS!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 			
@@ -1549,14 +1551,14 @@ void consAlunosNome(char nomeArq[]) {
 			clrRodape();
 			gotoxy(54, 29); printf("ENCONTRADO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		else{
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTRO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		textbackground(COR_FUNDO_CORPO);
@@ -1612,7 +1614,7 @@ void consDisCod(char nomeArq[]) {
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTRO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		textbackground(COR_FUNDO_CORPO);
@@ -1674,7 +1676,7 @@ void consNotas(char nomeArq[])
 				clrRodape();
 				gotoxy(54, 29); printf("ENCONTRADO!");
 				Sleep(1500);
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
 			}
 			else{
@@ -1683,7 +1685,7 @@ void consNotas(char nomeArq[])
 				gotoxy(54, 29); printf("SEM REGISTRO!");
 				Sleep(1500);
 				clrRodape();
-				clearkeybuf();
+				if(CKB_SWITCH) clearkeybuf();
 			}	
 		}
 		textbackground(COR_FUNDO_CORPO);
@@ -1735,14 +1737,14 @@ void consDisNome(char nomeArq[])
 			clrRodape();
 			gotoxy(54, 29); printf("ENCONTRADO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		else{
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTRO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		fclose(ptrDis);
@@ -1801,7 +1803,7 @@ void consAlunosRa(char nomeArq[]) {
 			clrRodape();
 			gotoxy(53, 29); printf("SEM REGISTROS!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 			 
 		}
@@ -1876,7 +1878,7 @@ void relAlunos(char nomeArq[]) {
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		clrRodape();
 		
 	}else{
@@ -1910,7 +1912,7 @@ void relAlunos(char nomeArq[]) {
 			gotoxy(53, posY); printf("PRONTO!");
 			Sleep(1500);
 			clrRodape(posY);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 		}
 		else{
 			
@@ -1918,7 +1920,7 @@ void relAlunos(char nomeArq[]) {
 			gotoxy(53, 29); printf("PRONTO!");
 			Sleep(1500);
 			clrRodape();
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 		}
 		getch();
 		
@@ -1949,7 +1951,7 @@ void relNotas(char nomeArq[])
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 	}
 	else{
 		
@@ -1982,7 +1984,7 @@ void relNotas(char nomeArq[])
 		gotoxy(53, 29); printf("PRONTO!");
 		Sleep(1500);
 		clrRodape();
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();
 		
 		if(regSize > 22){
@@ -2014,7 +2016,7 @@ void relDis(char nomeArq[])
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		clrRodape();
 	}
 	else
@@ -2039,7 +2041,7 @@ void relDis(char nomeArq[])
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
 			posY++;
 		}
-		clearkeybuf();
+		if(CKB_SWITCH) clearkeybuf();
 		getch();
 		
 		if(regSize > 22){
@@ -2076,7 +2078,7 @@ void cadastroDisciplina(char nomeArq[])
 			clrRodape();
 			gotoxy(54, 29); printf("DISCIPLINA EXISTENTE!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		else{
@@ -2093,7 +2095,7 @@ void cadastroDisciplina(char nomeArq[])
 			clrRodape();
 			gotoxy(53, 29); printf("REGISTRO SALVO!");
 			Sleep(1500);
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
 		}
 		posY++;
@@ -2161,7 +2163,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 						gotoxy(53, 29); printf("NOTA JA REGISTRADA!");
 						Sleep(1500);
 						clrRodape();
-						clearkeybuf();
+						if(CKB_SWITCH) clearkeybuf();
 						
 					}
 					else{
@@ -2170,7 +2172,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 						gotoxy(54, 29); printf("ENCONTRADO, OK!");
 						Sleep(700);
 						clrRodape();
-						clearkeybuf();
+						if(CKB_SWITCH) clearkeybuf();
 						
 						textbackground(COR_FUNDO_CORPO);
 						gotoxy(posX + 25, posY); textcolor(COR_NOTA);
@@ -2187,7 +2189,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 						gotoxy(53, 29); printf("REGISTRADO, OK!");
 						Sleep(1000);
 						clrRodape();
-						clearkeybuf();
+						if(CKB_SWITCH) clearkeybuf();
 					}
 				}
 				else{
@@ -2195,7 +2197,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 					gotoxy(53, 29); printf("DISCIPLINA NAO ENCONTRADA!");
 					Sleep(1500);
 					clrRodape();
-					clearkeybuf();
+					if(CKB_SWITCH) clearkeybuf();
 				}
 				
 				if(regNotas.notaDisCod > 0){
@@ -2212,7 +2214,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 			gotoxy(53, 29); printf("RA NAO ENCONTRADO!");
 			Sleep(1500);
 			clrRodape();
-			clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 		}
 		
 		textbackground(COR_FUNDO_CORPO);
@@ -2252,9 +2254,9 @@ void cadastroAlunos(char nomeArq[]) {
 			posY++;
 			clrRodape();
 			gotoxy(40, 29); printf("RA JA CADASTRADO, CADASTRO NAO EFETUADO!");
-			//Sleep(1500);
+			Sleep(1500);
 			clrRodape();
-			//clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 		}
 		else{
 			gotoxy(posX + 18, posY++); printf("Nome: ");
@@ -2264,9 +2266,9 @@ void cadastroAlunos(char nomeArq[]) {
 			
 			clrRodape();
 			gotoxy(54, 29); printf("CADASTRO OK!");
-			//Sleep(1500);
+			Sleep(1500);
 			clrRodape();
-			//clearkeybuf();
+			if(CKB_SWITCH) clearkeybuf();
 		}
 		
 		if(!(posY < 28))
