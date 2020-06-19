@@ -1,3 +1,3 @@
-# estrobos-som-cpp-project
- Aplicação para administrar álbums musicais, Estrobo's Som.
+# C/C++ Apps
+ Aplicações em C/C++.
 Input Dataset [Musical album dataset](http://millionsongdataset.com/).
