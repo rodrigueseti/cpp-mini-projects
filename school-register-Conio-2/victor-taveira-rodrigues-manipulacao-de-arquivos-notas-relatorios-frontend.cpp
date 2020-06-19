@@ -585,14 +585,11 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 {
 	tpDis regDis;
 	tpNotas regNota;
-	float soma;
-	int cont;
-	int pos, posY = 6, posX = 4;
+	float media;
+	int pos, posY = 6, posX = 4, largura = 0;
 	
 	FILE *ptrDis = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
-	
-	//clrscr();
 	
 	fread(&regDis, sizeof(tpDis), 1, ptrDis);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
@@ -605,48 +602,68 @@ void mediaDisciplinas(char nomeDis[], char nomeNota[])
 		if(CKB_SWITCH) clearkeybuf();
 	}else{
 		
+		while(!feof(ptrDis)){
+			
+			if(regDis.somaNotas / (float)regDis.qtdeReg < 6.0)
+				largura++;
+			fread(&regDis, sizeof(tpDis), 1, ptrDis);
+		}
+			
+		if(largura > 22){
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout(30 + (largura - 22));
+		}
+		
 		clrTittle();
-		gotoxy(54, 3); printf("DISCIPLINAS COM MEDIA [<6] - ALTERAR DINAMICA DO LAYOUT");
-		gotoxy(48, 4); printf("BUSCA EXAUSTIVA");
+		gotoxy(47, 3); printf("DISCIPLINAS COM MEDIA [<6]");
+		gotoxy(51, 4); printf("(BUSCA EXAUSTIVA)");
 		
 		
 		clrCorpo();
 		textcolor(COR_REL);
-		while(!feof(ptrDis) && !feof(ptrNota))
+		
+		fseek(ptrDis, 0, SEEK_SET);
+		fread(&regDis, sizeof(tpDis), 1, ptrDis);
+		
+		while(!feof(ptrDis))
 		{
-			soma = 0;
-			cont = 0;
-			
-			while(!feof(ptrNota))
-			{
-				if(regNota.status == 1 && regDis.disCod == regNota.notaDisCod )
-				{
-					soma = soma + regNota.nota;
-					cont++;
-				}
-				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
-			}
-			
-			
-			soma = soma / (float) cont;
-			
-			if(cont > 0 && soma < 6)
-			{
+			media = regDis.somaNotas / (float)regDis.qtdeReg;
+			if(media < 6.0){
 				gotoxy(posX, posY);      printf("COD.: %d", regDis.disCod);
 				gotoxy(posX + 20, posY); printf("DIS.: %s", regDis.disNome);	
-				gotoxy(posX + 40, posY++); printf("MEDIA GERAL: %.2f", soma);
+				gotoxy(posX + 40, posY++); printf("MEDIA GERAL: %.2f", media);
 			}
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
-			
-			fseek(ptrNota, 0, SEEK_SET);
-			fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 		}
-		clrRodape();
-		gotoxy(53, 29); printf("PRONTO!");
-		Sleep(1500);
-		clrRodape();
-		if(CKB_SWITCH) clearkeybuf();
-		getch();	
+		
+		if(largura > 22){
+			
+			//MODULARIZAR ESSAS SEQUENCIAS
+			posY = 30 + (largura - 23);
+			clrRodape(posY);
+			gotoxy(57, posY); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape(posY);
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout();
+		}
+		else{
+			
+			clrRodape();
+			gotoxy(57, 29); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape();
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+		}
 	}
 	fclose(ptrDis);
 	fclose(ptrNota);	
@@ -2151,7 +2168,7 @@ void relDis(char nomeArq[])
 			
 			gotoxy(posX, posY);      printf("CODIGO: %d", regDis.disCod);
 			gotoxy(posX + 21, posY); printf("DISCIPLINA: %s", regDis.disNome);
-			gotoxy(posX + 50, posY); printf("N. ACU.: %.2f", regDis.somaNotas);
+			gotoxy(posX + 50, posY); printf("NT. ACU.: %.2f", regDis.somaNotas);
 			gotoxy(posX + 70, posY); printf("QTDE. DE NT. REGIS.: %d", regDis.qtdeReg);
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
 			posY++;
