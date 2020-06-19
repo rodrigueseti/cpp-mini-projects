@@ -1,0 +1,119 @@
+printf("%c", 201); //canto esquerdo superior
+printf("%c", 187); //canto direito superior
+printf("%c", 200); //canto esquerdo inferior
+printf("%c", 188); //canto direito inferior
+
+
+printf("%c", 219); //barra espessa vertical, retangular
+printf("%c", 220); //meia barra espessa (quadrado), posicionado abaixo
+printf("%c", 221); //bloco pontilhado verticalmente, bom para relatorios
+printf("%c", 223); //meia barra espessa (quadrado), posicionado acima
+
+
+limite do eixo vertical 0 a 270
+
+tamanho padrao da janela
+
+lar 120
+alt 30
+
+		//CANTO ESQUERDO SUPERIOR
+		/*gotoxy(2, 1); printf("%c", 220);
+		gotoxy(3, 1); printf("%c", 220);
+		gotoxy(4, 1); printf("%c", 220);
+		gotoxy(2, 2); printf("%c", 219);*/
+		
+		//CANTO ESQUERDO INFERIOR
+		/*gotoxy(2, 29); printf("%c", 219);
+		gotoxy(2, 30); printf("%c", 223); 
+		gotoxy(3, 30); printf("%c", 223);
+		gotoxy(4, 30); printf("%c", 223);*/
+		
+		
+		//CANTO DIREIRO SUPERIOR
+		/*gotoxy(117, 1); printf("%c", 220);
+		gotoxy(118, 1); printf("%c", 220);
+		gotoxy(119, 1); printf("%c", 220);
+		gotoxy(119, 2); printf("%c", 219);*/
+		
+		
+		
+		//CANTO DIREITO INFERIOR	
+		/*gotoxy(119, 29); printf("%c", 219);
+		gotoxy(119, 30); printf("%c", 223); 
+		gotoxy(118, 30); printf("%c", 223);
+		gotoxy(117, 30); printf("%c", 223);*/
+
+
+cores:
+4 vermelho
+
+normvideo
+highvideo
+lowvideo
+switchbackground
+Replaces background color in the whole window.
+
+typedef enum
+{
+    0  BLACK,          /**< black color */
+    1  BLUE,           /**< blue color */
+    2  GREEN,          /**< green color */
+    3  CYAN,           /**< cyan color */
+    4  RED,            /**< red color */
+    5  MAGENTA,        /**< magenta color */
+    6  BROWN,          /**< brown color */
+    7  LIGHTGRAY,      /**< light gray color */
+    8  DARKGRAY,       /**< dark gray color */
+    9  LIGHTBLUE,      /**< light blue color */
+    10 LIGHTGREEN,     /**< light green color */
+    11 LIGHTCYAN,      /**< light cyan color */
+    12 LIGHTRED,       /**< light red color */
+    13 LIGHTMAGENTA,   /**< light magenta color */
+    14 YELLOW,         /**< yellow color */
+    15 WHITE           /**< white color */
+} COLORS;
+
+void desenharLayout()
+{
+	moldura(2, 1, 119, 30, COR_MOLDURA_CORPO, COR_FUNDO_CORPO, 0);
+	molduraLinhaRodape(2, 1, 119, 30, COR_MOLDURA_CORPO,  COR_FUNDO_RODAPE);
+	molduraTitulo(4, 2, 117, 5, COR_MOLDURA_TITULO, COR_FUNDO_TITULO, COR_FUNDO_CORPO);
+	
+	//textbackground, cor de saida LIGHTGRAY
+	//textcolor, 	  cor de saida RED
+}
+
+CABEM 22 ALUNOS NO LAYOUT DO PROGRAMA
+8
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+1111
+
+324234
+324234
+324234
+324234
+324234
+
+
+clrTittle();
+gotoxy(54, 3); printf("RELATORIO DE ALUNOS");
+gotoxy(48, 4); printf("BUSCA EXAUSTIVA");	
+
+	

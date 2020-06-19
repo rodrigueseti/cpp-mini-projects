@@ -20,7 +20,7 @@
 #define COR_NOTA           BLUE
 #define COR_REL            BLUE
 
-#define CKB_SWITCH 1
+#define CKB_SWITCH 0
 
 struct tpAluno {
 	
@@ -31,6 +31,8 @@ struct tpDis {
 	
 	int disCod;
 	char disNome[40];
+	int qtdeReg;
+	float somaNotas;
 };
 
 struct tpNotas {
@@ -39,6 +41,12 @@ struct tpNotas {
 	int notaDisCod;
 	float nota;
 	int status;
+};
+
+struct tpRel {
+	
+	int qtdeRegNotas; // QUANTIDADE DE DISCIPLINAS COM ALUNOS COM NOTAS CADASTRADAS
+	int somaQtdeRegNotas; // QUANTIDADE TOTAL DE NOTAS CADASTRADAS
 };
 
 char menu(void);
@@ -57,7 +65,7 @@ void criaArquivos(void);
 
 void cadastroAlunos(char nomeArq[]);
 void cadastroDisciplina(char nomeArq[]);
-void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[]);
+void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[]);
 
 void altAlunos(char nomeArq[]);
 void altDis(char nomeArq[]);
@@ -96,7 +104,7 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[]);
 void listagemPorIncial(char nomeArq[]);
 void mediaDisciplinas(char nomeDis[], char nomeNota[]);
 void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[]);
-void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[]);
+void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[], char arqRel[]);
 
 
 int main(){
@@ -166,7 +174,7 @@ int main(){
 				break;
 				
 			case 'N' :
-				cadastroNotas("Notas.dat", "Disciplinas.dat", "Alunos.dat");
+				cadastroNotas("Notas.dat", "Disciplinas.dat", "Alunos.dat", "Relatorios.dat");
 				break;
 				
 			case 'O' :
@@ -203,7 +211,7 @@ int main(){
 				break;
 				
 			case 'W' :
-				disciplinasAlunos("Alunos.dat", "Disciplinas.dat", "Notas.dat");
+				disciplinasAlunos("Alunos.dat", "Disciplinas.dat", "Notas.dat", "Relatorios.dat");
 				break;
 				
 			case 'X' :
@@ -338,21 +346,24 @@ void desenharLayout(int altura)
 	molduraTitulo(4, 2, 117, 5, COR_MOLDURA_TITULO, COR_FUNDO_TITULO, COR_FUNDO_CORPO);
 }
 
-void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
+void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char arqRel[])
 {
 	//FUNCAO OBRIGATORIAMENTE TERA QUE REALIZAR A EXCLUSAO FISICA DO Arquivo Notas PARA SER CONSIDERADO NO FOEF
 	tpAluno regAlu;
 	tpDis regDis;
 	tpNotas regNota;
+	tpRel regRel;
 	
-	int pos, posY = 6, posX = 4;
+	int pos, posY = 6, posX = 4, aux;
 	
 	FILE *ptrAlu = fopen(nomeAlu, "rb");
 	FILE *ptrDis = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
+	FILE *ptrRel = fopen(arqRel, "rb");
 	
 	fread(&regDis, sizeof(tpDis), 1, ptrDis);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	
 	if(feof(ptrNota)){
 		clrRodape();
@@ -363,15 +374,28 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 	}
 	else{
 		
+		aux = 1 + 2  * (regRel.qtdeRegNotas - 1) + regRel.somaQtdeRegNotas;
+		
+		if(aux > 22){
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout(30 + (aux - 22));
+		}
+		
 		clrTittle();
-		gotoxy(54, 3); printf("DISCIPLINAS E ALUNOS");
-		gotoxy(48, 4); printf("(Busca Exustiva)");
+		gotoxy(51, 3); printf("DISCIPLINAS E ALUNOS");
+		gotoxy(55, 4); printf("(VARREDURA)");
 		
 		clrCorpo();
 		textcolor(COR_NOTA);
-		while(!feof(ptrDis))
+		while(!feof(ptrDis)) 
 		{
-			while(!feof(ptrNota) && (regDis.disCod != regNota.notaDisCod || regNota.status == 0))
+			/* 
+			Se quiser tratar se o campo tpDis.qtdeReg na verificacao se existe ou nao algum aluno com nota cadastrada na mesma disciplina
+			terei que realizar a exclusao fisica do arquivo de notas assim que encerrar a exclusao logica da mesma!
+			*/
+			while(!feof(ptrNota) && (regDis.disCod != regNota.notaDisCod || regNota.status == 0)) //VERIFICACAO PODERA SER ALTERADA
 				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 			
 			if(!feof(ptrNota))
@@ -400,16 +424,36 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[])
 			fseek(ptrNota, 0, SEEK_SET);
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
 		}
-		clrRodape();
-		gotoxy(53, 29); printf("PRONTO!");
-		Sleep(1500);
-		clrRodape();
-		if(CKB_SWITCH) clearkeybuf();
-		getch();
+		if(aux > 22){
+			
+			posY = 30 + (aux - 23);
+			clrRodape(posY);
+			gotoxy(57, posY); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape(posY);
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout();
+		}
+		else{
+			
+			clrRodape();
+			gotoxy(57, 29); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape();
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+		}
 	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
+	fclose(ptrRel);
 }
 
 void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
@@ -1501,13 +1545,32 @@ void altAlunos(char nomeArq[]) {
 
 void criaArquivos(void) {
 	
-	FILE *ptrArquivo = fopen("Alunos.dat","ab");
+	tpRel regRel;
+	FILE *ptrArquivo = fopen("Alunos.dat", "ab");
 	fclose(ptrArquivo);
 	
-	ptrArquivo = fopen("Disciplinas.dat","ab");
+	ptrArquivo = fopen("Disciplinas.dat", "ab");
 	fclose(ptrArquivo);
 	
- 	ptrArquivo = fopen("Notas.dat","ab");
+ 	ptrArquivo = fopen("Notas.dat", "ab");
+	fclose(ptrArquivo);
+	
+	ptrArquivo = fopen("Relatorios.dat", "ab+");
+	
+	fread(&regRel, sizeof(tpRel), 1, ptrArquivo);
+	
+	if(feof(ptrArquivo)){
+		regRel.qtdeRegNotas = 0;
+		regRel.somaQtdeRegNotas = 0;
+		
+		fwrite(&regRel, sizeof(tpRel), 1, ptrArquivo);
+		
+		/*clrRodape();
+		gotoxy(53, 29); printf("Arquivos Criados e Inicializados!");
+		Sleep(1500);
+		clrRodape();
+		if(CKB_SWITCH) clearkeybuf();*/
+	}
 	fclose(ptrArquivo);
 }
 
@@ -2038,6 +2101,8 @@ void relDis(char nomeArq[])
 			
 			gotoxy(posX, posY);      printf("CODIGO: %d", regDis.disCod);
 			gotoxy(posX + 21, posY); printf("DISCIPLINA: %s", regDis.disNome);
+			gotoxy(posX + 50, posY); printf("N. ACU.: %.2f", regDis.somaNotas);
+			gotoxy(posX + 70, posY); printf("QTDE. DE NT. REGIS.: %d", regDis.qtdeReg);
 			fread(&regDis, sizeof(tpDis), 1, ptrDis);
 			posY++;
 		}
@@ -2087,6 +2152,9 @@ void cadastroDisciplina(char nomeArq[])
 			fflush(stdin);
 			gets(regDis.disNome);
 			
+			regDis.qtdeReg = 0;
+			regDis.somaNotas = 0;
+			
 			fseek(ptrDis, 0, SEEK_END);
 			fwrite(&regDis, sizeof(tpDis), 1, ptrDis);
 			
@@ -2115,16 +2183,19 @@ void cadastroDisciplina(char nomeArq[])
 	fclose(ptrDis);
 }
 
-void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
+void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[])
 {
 	// CONTINUAR
 	tpNotas regNotas;
+	tpDis regDis;
+	tpRel regRel;
 	
-	int pos, posY = 6, posX = 4;
+	int pos, posY = 6, posX = 4, posDis;
 	
 	FILE *ptrNota = fopen(arqNota, "rb+");
-	FILE *ptrDis = fopen(arqDis, "rb");
+	FILE *ptrDis = fopen(arqDis, "rb+");
 	FILE *ptrAluno = fopen(arqAlu, "rb");
+	FILE *ptrRel = fopen(arqRel, "rb+");
 	
 	clrTittle();	
 	gotoxy(54, 3); printf("INSERIR NOTAS - (INCOMPLETO)");
@@ -2136,7 +2207,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 	fflush(stdin);
 	gets(regNotas.notaRa);
 	
-	while(stricmp(regNotas.notaRa, "\0") != 0) 
+	while(stricmp(regNotas.notaRa, "\0") != 0)
 	{
 		//Busca Exaustiva...
 		pos = buscaAluno(ptrAluno, regNotas.notaRa);
@@ -2144,14 +2215,14 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 		if(pos > -1) 
 		{
 			// Ra encontrado no arquivo alunos...
-			gotoxy(posX, posY); printf("CODIGO DIS.: ");
+			gotoxy(posX, posY++); printf("CODIGO DIS.: ");
 			scanf("%d", &regNotas.notaDisCod);
 			
 			while(regNotas.notaDisCod > 0)
 			{
-				pos = buscaBinariaDis(ptrDis, regNotas.notaDisCod);
+				posDis = buscaBinariaDis(ptrDis, regNotas.notaDisCod);
 				
-				if(pos > -1)
+				if(posDis > -1)
 				{
 					//Busca Exaustiva...
 					pos = buscaExaustivaNotas(ptrNota, regNotas.notaRa, regNotas.notaDisCod);
@@ -2177,13 +2248,34 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 						textbackground(COR_FUNDO_CORPO);
 						gotoxy(posX + 25, posY); textcolor(COR_NOTA);
 						printf("NOTA: ");
-						scanf("%f",&regNotas.nota);
+						scanf("%f", &regNotas.nota);
 						regNotas.status = 1;
+						
 						
 						fseek(ptrNota, 0, SEEK_END);
 						fwrite(&regNotas, sizeof(tpNotas), 1, ptrNota);
 						
 						insercaoDiretaNotas(ptrNota);
+						
+						fseek(ptrRel, 0, SEEK_SET);
+						fread(&regRel, sizeof(tpRel), 1, ptrRel);
+						
+						
+						fseek(ptrDis, posDis, SEEK_SET);
+						fread(&regDis, sizeof(tpDis), 1, ptrDis);
+						
+						if(regDis.qtdeReg == 0) regRel.qtdeRegNotas++; // qtdeRegNotas QUANTAS DISCIPLINAS QUE EXISTEM ALUNOS COM NOTAS CADASTRADAS
+						
+						regDis.qtdeReg++;
+						regDis.somaNotas += regNotas.nota;
+						
+						fseek(ptrDis, posDis, SEEK_SET);
+						fwrite(&regDis, sizeof(tpDis), 1, ptrDis);
+						
+						
+						regRel.somaQtdeRegNotas++; // somaQtdeRegNotas SOMA DA QUANTIDADE DE NOTAS CADASTRADAS
+						fseek(ptrRel, 0, SEEK_SET);
+						fwrite(&regRel, sizeof(tpRel), 1, ptrRel);
 						
 						clrRodape();
 						gotoxy(53, 29); printf("REGISTRADO, OK!");
@@ -2204,7 +2296,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 					
 					textbackground(COR_FUNDO_CORPO);
 					textcolor(COR_NOTA);
-					gotoxy(posX, posY); printf("CODIGO DIS.: ");
+					gotoxy(posX, posY++); printf("CODIGO DIS.: ");
 					scanf("%d", &regNotas.notaDisCod);		
 				}
 			}
@@ -2226,6 +2318,7 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[])
 	fclose(ptrDis);
 	fclose(ptrNota);
 	fclose(ptrAluno);
+	fclose(ptrRel);
 }
 
 void cadastroAlunos(char nomeArq[]) {
