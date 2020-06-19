@@ -25,15 +25,15 @@
 struct tpAluno {
 	
 	char aluRa[13], aluNome[40];
-	int qtdeReg; //Quantidade de vezes que um aluno 
+	int qtdeReg; //Quantidade de vezes que um aluno foi registrado em Notas
 };
 
 struct tpDis {
 	
 	int disCod;
 	char disNome[40];
-	int qtdeReg; //Quantidade de Disciplinas registrados em Notas
-	float somaNotas; //Quantidade de Notas Registradas
+	int qtdeReg; //Quantidade de vezes que notas de Disciplinas foram registrados em Notas
+	float somaNotas; //Soma de todas as Notas Registradas em uma Disciplina ao todo
 };
 
 struct tpNotas {
@@ -693,7 +693,7 @@ void listagemPorIncial(char nomeArq[])
 	}else{
 		
 		clrTittle();
-		gotoxy(54, 3); printf("BUSCA POR INICIAL");
+		gotoxy(51, 3); printf("BUSCA POR INICIAL");
 		gotoxy(48, 4); printf("(VARREDURA - EXAUSTIVA)");
 		
 		clrCorpo();
@@ -716,7 +716,7 @@ void listagemPorIncial(char nomeArq[])
 				desenharLayout(30 + (cont - 21));
 				
 				clrTittle();
-				gotoxy(54, 3); printf("BUSCA POR INICIAL %d", cont);
+				gotoxy(51, 3); printf("BUSCA POR INICIAL");
 				gotoxy(48, 4); printf("(VARREDURA - EXAUSTIVA)");
 				
 				textbackground(COR_FUNDO_CORPO);
@@ -816,8 +816,8 @@ void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[])
 		}
 		
 		clrTittle();
-		gotoxy(54, 3); printf("ALUNOS REPROVADOS %d", regSize);
-		gotoxy(48, 4); printf("(BUSCA EXAUSTIVA - EXAUSTIVA)");
+		gotoxy(52, 3); printf("ALUNOS REPROVADOS");
+		gotoxy(52, 4); printf("(BUSCA EXAUSTIVA)");
 		
 		clrCorpo();
 		textcolor(COR_REL);
@@ -1175,14 +1175,15 @@ void excFisAlunos(char nomeArq[]) {
 		fclose(ptrAluno);
 }
 
-
-
-
 void excLogicaNotas(char nomeArq[])
 {
 	tpNotas regNotas;
+	tpRel   regRel;
+	tpDis   regDis;
+	
 	int pos, posY = 6, posX = 4, codAux;
 	
+	FILE *ptrNota = fopen(nomeArq, "rb+");
 	FILE *ptrNota = fopen(nomeArq, "rb+");
 	
 	clrTittle();
@@ -1207,9 +1208,9 @@ void excLogicaNotas(char nomeArq[])
 		
 			if(pos > -1)
 			{
+				
 				fseek(ptrNota, pos, SEEK_SET);
 				fread(&regNotas, sizeof(tpNotas), 1, ptrNota);
-				
 				
 				gotoxy(posX, posY);        printf("REGISTRO ACAD. (RA): %s", regNotas.notaRa);
 				gotoxy(posX + 34, posY);   printf("COD. DIS: %d", regNotas.notaDisCod);
@@ -1253,7 +1254,7 @@ void excFisicaNotas(char nomeArq[])
 	FILE *ptrTemp = fopen("temp.dat", "wb");
 	
 	clrRodape();
-	gotoxy(54, 29); printf("EXCLUSAO ARQUIVO: %s...", nomeArq);
+	gotoxy(45, 29); printf("EXCLUSAO ARQUIVO: %s...", nomeArq);
 	Sleep(1500);
 	clrRodape();
 				
@@ -1272,7 +1273,7 @@ void excFisicaNotas(char nomeArq[])
 	remove(nomeArq);
 	rename("temp.dat", nomeArq);
 	
-	gotoxy(54, 29); printf("FEITO!");
+	gotoxy(57, 29); printf("PRONTO!");
 	Sleep(1000);
 	clrRodape();
 	if(CKB_SWITCH) clearkeybuf();
