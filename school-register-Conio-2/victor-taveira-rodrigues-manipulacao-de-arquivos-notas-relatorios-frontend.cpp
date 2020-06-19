@@ -25,14 +25,15 @@
 struct tpAluno {
 	
 	char aluRa[13], aluNome[40];
+	int qtdeReg; //Quantidade de vezes que um aluno 
 };
 
 struct tpDis {
 	
 	int disCod;
 	char disNome[40];
-	int qtdeReg;
-	float somaNotas;
+	int qtdeReg; //Quantidade de Disciplinas registrados em Notas
+	float somaNotas; //Quantidade de Notas Registradas
 };
 
 struct tpNotas {
@@ -45,7 +46,8 @@ struct tpNotas {
 
 struct tpRel {
 	
-	int qtdeRegNotas; // QUANTIDADE DE DISCIPLINAS COM ALUNOS COM NOTAS CADASTRADAS
+	int qtdeDis; // QUANTIDADE DE DISCIPLINAS COM ALUNOS COM NOTAS CADASTRADAS
+	int qtdeAlu; //Quantidade de Alunos registrados em Notas
 	int somaQtdeRegNotas; // QUANTIDADE TOTAL DE NOTAS CADASTRADAS
 };
 
@@ -103,7 +105,7 @@ void insercaoDiretaNotas(FILE *ptrNota);
 void alunosReprovados(char nomeAlu[], char nomeDis[], char nomeNota[]);
 void listagemPorIncial(char nomeArq[]);
 void mediaDisciplinas(char nomeDis[], char nomeNota[]);
-void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[]);
+void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[], char arqRel[]);
 void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[], char arqRel[]);
 
 
@@ -207,7 +209,7 @@ int main(){
 				break;
 				
 			case 'V' :
-				alunoDisciplinas("Alunos.dat", "Disciplinas.dat", "Notas.dat");
+				alunoDisciplinas("Alunos.dat", "Disciplinas.dat", "Notas.dat", "Relatorios.dat");
 				break;
 				
 			case 'W' :
@@ -365,6 +367,13 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	
+	/*clrCorpo();
+	textcolor(COR_REL);
+	gotoxy(posX, posY++); printf("qtdeDis (Dis): %d", regRel.qtdeDis);
+	gotoxy(posX, posY++); printf("qtdeAlu: %d", regRel.qtdeAlu);
+	gotoxy(posX, posY++); printf("somaQtdeRegNotas: %d", regRel.somaQtdeRegNotas);
+	getch();*/
+	
 	if(feof(ptrNota)){
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
@@ -374,7 +383,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	}
 	else{
 		
-		aux = 1 + 2  * (regRel.qtdeRegNotas - 1) + regRel.somaQtdeRegNotas;
+		aux = 1 + 2  * (regRel.qtdeDis - 1) + regRel.somaQtdeRegNotas;
 		
 		if(aux > 22){
 			
@@ -456,22 +465,30 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	fclose(ptrRel);
 }
 
-void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
+void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[], char arqRel[])
 {
 	//FUNCAO OBRIGATORIAMENTE TERA QUE REALIZAR A EXCLUSAO FISICA DO Arquivo Notas PARA SER CONSIDERADO NO FOEF
 	tpAluno regAlu;
 	tpDis regDis;
 	tpNotas regNota;
+	tpRel regRel;
 	
-	int pos, posY = 6, posX = 4;
+	int pos, posY = 6, posX = 4, aux;
 	
-	FILE *ptrAlu = fopen(nomeAlu, "rb");
-	FILE *ptrDis = fopen(nomeDis, "rb");
+	FILE *ptrAlu  = fopen(nomeAlu, "rb");
+	FILE *ptrDis  = fopen(nomeDis, "rb");
 	FILE *ptrNota = fopen(nomeNota, "rb");
+	FILE *ptrRel  = fopen(arqRel, "rb");
 	
-	//clrscr();
 	fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+	fread(&regRel, sizeof(tpRel), 1, ptrRel);
+	
+	/*clrCorpo();
+	textcolor(COR_REL);
+	gotoxy(posX, posY++); printf("qtdeDis (Dis): %d", regRel.qtdeDis);
+	gotoxy(posX, posY++); printf("qtdeAlu: %d", regRel.qtdeAlu);
+	gotoxy(posX, posY++); printf("somaQtdeRegNotas: %d", regRel.somaQtdeRegNotas);*/
 	
 	if(feof(ptrNota)){
 		
@@ -483,9 +500,18 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 	}
 	else{
 		
+		aux = 1 + 2 * (regRel.qtdeAlu - 1) + regRel.somaQtdeRegNotas;
+		
+		if(aux > 22){
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout(30 + (aux - 22));
+		}
+		
 		clrTittle();
-		gotoxy(54, 3); printf("ALUNOS E DISCIPLINAS");
-		gotoxy(48, 4); printf("(BUSCA EXAUSTIVA)");
+		gotoxy(52, 3); printf("ALUNOS E DISCIPLINAS");
+		gotoxy(51, 4); printf("(EXAUSTIVA - BINARIO)");
 		
 		clrCorpo();
 		textcolor(COR_REL);
@@ -522,16 +548,37 @@ void alunoDisciplinas(char nomeAlu[], char nomeDis[], char nomeNota[])
 			fseek(ptrNota, 0, SEEK_SET);
 			fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
 		}
-		clrRodape();
-		gotoxy(53, 29); printf("PRONTO!");
-		Sleep(1500);
-		clrRodape();
-		if(CKB_SWITCH) clearkeybuf();
-		getch();
+		
+		if(aux > 22){
+			
+			posY = 30 + (aux - 23);
+			clrRodape(posY);
+			gotoxy(57, posY); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape(posY);
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+			
+			textbackground(BLACK);
+			system("cls");
+			desenharLayout();
+		}
+		else{
+			
+			clrRodape();
+			gotoxy(57, 29); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape();
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+		}
 	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
+	fclose(ptrRel);
 }
 
 void mediaDisciplinas(char nomeDis[], char nomeNota[])
@@ -1560,7 +1607,9 @@ void criaArquivos(void) {
 	fread(&regRel, sizeof(tpRel), 1, ptrArquivo);
 	
 	if(feof(ptrArquivo)){
-		regRel.qtdeRegNotas = 0;
+		
+		regRel.qtdeDis = 0;
+		regRel.qtdeAlu = 0;
 		regRel.somaQtdeRegNotas = 0;
 		
 		fwrite(&regRel, sizeof(tpRel), 1, ptrArquivo);
@@ -1963,6 +2012,7 @@ void relAlunos(char nomeArq[]) {
 		{
 			gotoxy(posX, posY);        printf("REGISTRO ACAD. (RA): %s", regAlu.aluRa);
 			gotoxy(posX + 36, posY);   printf("NOME: %s", regAlu.aluNome);
+			gotoxy(posX + 55, posY);   printf("REG. EM NOTAS: %d", regAlu.qtdeReg);
 			fread(&regAlu, sizeof(tpAluno), 1, ptrAluno);
 			posY++;
 		}
@@ -2189,12 +2239,13 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[])
 	tpNotas regNotas;
 	tpDis regDis;
 	tpRel regRel;
+	tpAluno regAlu;
 	
-	int pos, posY = 6, posX = 4, posDis;
+	int pos, posY = 6, posX = 4, posDis, posAlu;
 	
 	FILE *ptrNota = fopen(arqNota, "rb+");
 	FILE *ptrDis = fopen(arqDis, "rb+");
-	FILE *ptrAluno = fopen(arqAlu, "rb");
+	FILE *ptrAluno = fopen(arqAlu, "rb+");
 	FILE *ptrRel = fopen(arqRel, "rb+");
 	
 	clrTittle();	
@@ -2210,9 +2261,9 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[])
 	while(stricmp(regNotas.notaRa, "\0") != 0)
 	{
 		//Busca Exaustiva...
-		pos = buscaAluno(ptrAluno, regNotas.notaRa);
+		posAlu = buscaAluno(ptrAluno, regNotas.notaRa);
 		
-		if(pos > -1) 
+		if(posAlu > -1) 
 		{
 			// Ra encontrado no arquivo alunos...
 			gotoxy(posX, posY++); printf("CODIGO DIS.: ");
@@ -2251,30 +2302,42 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[])
 						scanf("%f", &regNotas.nota);
 						regNotas.status = 1;
 						
-						
 						fseek(ptrNota, 0, SEEK_END);
-						fwrite(&regNotas, sizeof(tpNotas), 1, ptrNota);
+						fwrite(&regNotas, sizeof(tpNotas), 1, ptrNota); //REGISTRA A NOTA COM STATUS 1
 						
-						insercaoDiretaNotas(ptrNota);
+						insercaoDiretaNotas(ptrNota); //REPOSICIONA COM INSERCAO DIRETA
 						
 						fseek(ptrRel, 0, SEEK_SET);
-						fread(&regRel, sizeof(tpRel), 1, ptrRel);
+						fread(&regRel, sizeof(tpRel), 1, ptrRel); //LE STRUCT RELATORIO
+						
+						
+						fseek(ptrAluno, posAlu, SEEK_SET);
+						fread(&regAlu, sizeof(tpAluno), 1, ptrAluno);
+						if(regAlu.qtdeReg == 0) // QUANTAS VEZES DIFERENTES ALUNOS FORAM REGISTRADAS EM NOTAS, O VALOR MAXIMO, SERA O VALOR MAXIMO DE ALUNOS REGISTRADOS
+						{
+							regRel.qtdeAlu++;
+							/*gotoxy(posX, posY++); printf("ENTROU");
+							getch();*/
+						}  
+						regAlu.qtdeReg++; //QUANTAS VEZES CADA ALUNO TEVE SUA NOTA REGISTRADA EM DIFERENTES DISCIPLINAS
+						fseek(ptrAluno, posAlu, SEEK_SET); //GRAVANDO INFORMACOES ATUALIZADAS EM ALUNOS
+						fwrite(&regAlu, sizeof(tpAluno), 1, ptrAluno);
 						
 						
 						fseek(ptrDis, posDis, SEEK_SET);
 						fread(&regDis, sizeof(tpDis), 1, ptrDis);
-						
-						if(regDis.qtdeReg == 0) regRel.qtdeRegNotas++; // qtdeRegNotas QUANTAS DISCIPLINAS QUE EXISTEM ALUNOS COM NOTAS CADASTRADAS
-						
-						regDis.qtdeReg++;
-						regDis.somaNotas += regNotas.nota;
-						
+						if(regDis.qtdeReg == 0) // QUANTAS VEZES DIFERENTES DISCIPLINAS FORAM REGISTRADAS EM NOTAS, O VALOR MAXIMO, SERA O VALOR MAXIMO DE DISCIPLINAS REGISTRADOS
+						{
+							regRel.qtdeDis++; 
+						} 
+						regDis.qtdeReg++; //QUANTAS VEZES CADA DISCIPLINA FOI USADA PARA CADASTRAR UMA NOTA EM DIFERENTES RA
+						regDis.somaNotas += regNotas.nota; //NOTAS ACUMULADAS EM CADA DISCIPLINA, PARA CALCULO DAS MEDIAS						
 						fseek(ptrDis, posDis, SEEK_SET);
-						fwrite(&regDis, sizeof(tpDis), 1, ptrDis);
+						fwrite(&regDis, sizeof(tpDis), 1, ptrDis); //GRAVANDO INFORMACOES ATUALIZADAS EM DISCIPLINAS
 						
 						
-						regRel.somaQtdeRegNotas++; // somaQtdeRegNotas SOMA DA QUANTIDADE DE NOTAS CADASTRADAS
-						fseek(ptrRel, 0, SEEK_SET);
+						regRel.somaQtdeRegNotas++; // QUANTIDADE TOTAL DE REGISTROS EFETUADOS EM NOTAS
+						fseek(ptrRel, 0, SEEK_SET); //GRAVANDO INFORMACOES ATUALIZADAS EM RELATORIOS, CONTEM UM REGISTRO APENAS QUE VAI SENDO MODIFICADO CONFORME O CADASTRO
 						fwrite(&regRel, sizeof(tpRel), 1, ptrRel);
 						
 						clrRodape();
@@ -2355,6 +2418,7 @@ void cadastroAlunos(char nomeArq[]) {
 			gotoxy(posX + 18, posY++); printf("Nome: ");
 			fflush(stdin);
 			gets(regAlu.aluNome);
+			regAlu.qtdeReg = 0;
 			fwrite(&regAlu, sizeof(tpAluno), 1, ptrAluno);
 			
 			clrRodape();
