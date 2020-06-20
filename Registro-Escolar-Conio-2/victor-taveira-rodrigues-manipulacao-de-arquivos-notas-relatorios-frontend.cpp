@@ -1800,8 +1800,8 @@ void consNotas(char nomeArq[])
 	FILE *ptrNota = fopen(nomeArq, "rb");
 	
 	clrTittle();
-	gotoxy(54, 3); printf("CONSULTAR NOTAS - VERIFICAR LIMITE");
-	gotoxy(48, 4); printf("(BUSCA EXAUSTIVA)");
+	gotoxy(53, 3); printf("CONSULTAR NOTAS");
+	gotoxy(52, 4); printf("(BUSCA EXAUSTIVA)");
 	
 	
 	clrCorpo();
@@ -1812,7 +1812,7 @@ void consNotas(char nomeArq[])
 	
 	while(stricmp(regNotas.notaRa, "\0"))
 	{
-		if(!(posY < 27)){
+		if(!(posY < 26)){
 			clrCorpo();
 			posY = 6;
 		}
@@ -1835,7 +1835,7 @@ void consNotas(char nomeArq[])
 				gotoxy(posX + 57, posY++); printf("NOTA: %.2f", regNotas.nota);
 				
 				clrRodape();
-				gotoxy(54, 29); printf("ENCONTRADO!");
+				gotoxy(55, 29); printf("ENCONTRADO!");
 				Sleep(1500);
 				if(CKB_SWITCH) clearkeybuf();
 				clrRodape();
@@ -1843,7 +1843,7 @@ void consNotas(char nomeArq[])
 			else{
 				
 				clrRodape();
-				gotoxy(54, 29); printf("SEM REGISTRO!");
+				gotoxy(53, 29); printf("NAO ENCONTRADO!");
 				Sleep(1500);
 				clrRodape();
 				if(CKB_SWITCH) clearkeybuf();
