@@ -89,7 +89,7 @@ void consNotas(char nomeArq[]);
 
 void relAlunos(char nomeArq[]);
 void relDis(char nomeArq[]);
-void relNotas(char nomeArq[]);
+void relNotas(char nomeArq[], char arqRel[]);
 
 int buscaAluno(FILE *ptrAluno, char ra[]);
 int buscaBinariaAluno(FILE *ptrAluno, char ra[]);
@@ -180,7 +180,7 @@ int main(){
 				break;
 				
 			case 'O' :
-				relNotas("Notas.dat");
+				relNotas("Notas.dat", "Relatorios.dat");
 				break;
 				
 			case 'P' :
@@ -2095,19 +2095,19 @@ void relAlunos(char nomeArq[]) {
 	fclose(ptrAluno);
 }
 
-void relNotas(char nomeArq[])
+void relNotas(char nomeArq[], char arqRel[])
 {
 	tpNotas regNota;
+	tpRel   regRel;
 	
 	FILE *ptrNota = fopen(nomeArq, "rb");
+	FILE *ptrRel  = fopen(arqRel, "rb");
+	
+	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	int pos, posY = 6, posX = 4;
-	
-	
-	fseek(ptrNota, 0, SEEK_END);
-	int regSize = ftell(ptrNota) / sizeof(tpNotas);
-	fseek(ptrNota, 0, SEEK_SET);
-	
+		
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+	
 	if(feof(ptrNota)){
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
@@ -2117,16 +2117,16 @@ void relNotas(char nomeArq[])
 	}
 	else{
 		
-		if(regSize > 22)
+		if(regRel.somaQtdeRegNotas > 22)
 		{	
 			textbackground(BLACK);
 			system("cls");
-			desenharLayout(30 + (regSize - 22));
+			desenharLayout(30 + (regRel.somaQtdeRegNotas - 22));
 		}
 		
 		clrTittle();
-		gotoxy(54, 3); printf("RELATORIO DE NOTAS");
-		gotoxy(48, 4); printf("(METODO EXAUSTIVA)");
+		gotoxy(51, 3); printf("RELATORIO DE NOTAS");
+		gotoxy(51, 4); printf("(METODO EXAUSTIVA)");
 		
 		clrCorpo();
 		textcolor(COR_NOTA);
@@ -2142,20 +2142,33 @@ void relNotas(char nomeArq[])
 			}
 			fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 		}
-		
-		clrRodape();
-		gotoxy(53, 29); printf("PRONTO!");
-		Sleep(1500);
-		clrRodape();
-		if(CKB_SWITCH) clearkeybuf();
-		getch();
-		
-		if(regSize > 22){
+		if(regRel.somaQtdeRegNotas > 22){
+			
+			posY = 30 + (regRel.somaQtdeRegNotas - 23);
+			clrRodape(posY);
+			gotoxy(57, posY); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape(posY);
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+			
 			textbackground(BLACK);
 			system("cls");
 			desenharLayout();
 		}
+		else{
+			
+			clrRodape();
+			gotoxy(57, 29); printf("PRONTO!");
+			Sleep(1500);
+			clrRodape();
+			if(CKB_SWITCH) clearkeybuf();
+			
+			getch();
+		}
 	}
+	fclose(ptrRel);
 	fclose(ptrNota);
 }
 
