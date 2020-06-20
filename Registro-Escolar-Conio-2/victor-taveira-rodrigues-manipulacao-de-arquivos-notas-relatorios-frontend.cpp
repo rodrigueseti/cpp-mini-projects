@@ -76,7 +76,7 @@ void altNotas(char nomeArq[]);
 void excFisAlunos(char nomeArq[]);
 void excFisDisciplina(char nomeArq[]);
 void excFisicaNotas(char nomeArq[]);
-void excLogicaNotas(char nomeArq[]);
+void excLogicaNotas(char nomeNota[], char nomeAlu[], char nomeDis[], char nomeRel[]);
 
 
 void ordenaAlunos(char nomeArq[]);
@@ -192,7 +192,7 @@ int main(){
 				break;
 				
 			case 'R' :
-				excLogicaNotas("Notas.dat");
+				excLogicaNotas("Notas.dat", "Alunos.dat", "Disciplinas.dat", "Relatorios.dat");
 				break;
 				
 			case 'S' :
@@ -367,14 +367,14 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	
-	/*clrCorpo();
+	clrCorpo();
 	textcolor(COR_REL);
-	gotoxy(posX, posY++); printf("qtdeDis (Dis): %d", regRel.qtdeDis);
+	gotoxy(posX, posY++); printf("qtdeDis: %d", regRel.qtdeDis);
 	gotoxy(posX, posY++); printf("qtdeAlu: %d", regRel.qtdeAlu);
 	gotoxy(posX, posY++); printf("somaQtdeRegNotas: %d", regRel.somaQtdeRegNotas);
-	getch();*/
+	getch();
 	
-	if(feof(ptrNota)){
+	/*if(feof(ptrNota)){
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
@@ -400,10 +400,10 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 		textcolor(COR_NOTA);
 		while(!feof(ptrDis)) 
 		{
-			/* 
-			Se quiser tratar se o campo tpDis.qtdeReg na verificacao se existe ou nao algum aluno com nota cadastrada na mesma disciplina
-			terei que realizar a exclusao fisica do arquivo de notas assim que encerrar a exclusao logica da mesma!
-			*/
+			
+			//Se quiser tratar se o campo tpDis.qtdeReg na verificacao se existe ou nao algum aluno com nota cadastrada na mesma disciplina
+			//terei que realizar a exclusao fisica do arquivo de notas assim que encerrar a exclusao logica da mesma!
+			
 			while(!feof(ptrNota) && (regDis.disCod != regNota.notaDisCod || regNota.status == 0)) //VERIFICACAO PODERA SER ALTERADA
 				fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 			
@@ -458,7 +458,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 			
 			getch();
 		}
-	}
+	}*/
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
@@ -1174,22 +1174,24 @@ void excFisAlunos(char nomeArq[]) {
 	else
 		fclose(ptrAluno);
 }
-
-void excLogicaNotas(char nomeArq[])
+//excLogicaNotas("Notas.dat", "Alunos.dat", "Disciplinas.dat", "Relatorios.dat");
+void excLogicaNotas(char nomeNota[], char nomeAlu[], char nomeDis[], char nomeRel[])
 {
 	tpNotas regNotas;
 	tpRel   regRel;
 	tpDis   regDis;
+	tpAluno regAlu;
 	
 	int pos, posY = 6, posX = 4, codAux;
 	
-	FILE *ptrNota = fopen(nomeArq, "rb+");
-	FILE *ptrNota = fopen(nomeArq, "rb+");
+	FILE *ptrNota = fopen(nomeNota, "rb+");
+	FILE *ptrAlu  = fopen(nomeAlu,  "rb+");
+	FILE *ptrDis  = fopen(nomeDis,  "rb+");
+	FILE *ptrRel  = fopen(nomeRel,  "rb+");
 	
 	clrTittle();
-	gotoxy(54, 3); printf("EXCLUIR DADOS DE NOTAS");
-	gotoxy(48, 4); printf("(BUSCA EXAUSTIVA)");
-	
+	gotoxy(49, 3); printf("EXCLUIR DADOS DE NOTAS");
+	gotoxy(51, 4); printf("(BUSCA EXAUSTIVA)");
 	
 	clrCorpo();
 	textcolor(COR_NOTA);
@@ -1224,8 +1226,34 @@ void excLogicaNotas(char nomeArq[])
 					fseek(ptrNota, pos, SEEK_SET);
 					fwrite(&regNotas, sizeof(tpNotas), 1, ptrNota);
 					
+					fseek(ptrRel, 0, SEEK_SET);
+					fread(&regRel, sizeof(tpRel), 1, ptrRel);
+					
+					textcolor(COR_NOTA);
+					pos = buscaAluno(ptrAlu, regNotas.notaRa);
+					fseek(ptrAlu, pos, SEEK_SET);
+					fread(&regAlu, sizeof(tpAluno), 1, ptrAlu);
+					regAlu.qtdeReg--;
+					if(regAlu.qtdeReg == 0)
+						regRel.qtdeAlu--;
+					fseek(ptrAlu, pos, SEEK_SET);
+					fwrite(&regAlu, sizeof(tpAluno), 1, ptrAlu);
+					
+					pos = buscaBinariaDis(ptrDis, regNotas.notaDisCod);
+					fseek(ptrDis, pos, SEEK_SET);
+					fread(&regDis, sizeof(tpDis), 1, ptrDis);
+					regDis.qtdeReg--;
+					if(regDis.qtdeReg == 0)
+						regRel.qtdeDis--;
+					fseek(ptrDis, pos, SEEK_SET);
+					fwrite(&regDis, sizeof(tpDis), 1, ptrDis);
+					
+					regRel.somaQtdeRegNotas--;
+					fseek(ptrRel, 0, SEEK_SET);
+					fwrite(&regRel, sizeof(tpRel), 1, ptrRel);
+					
 					clrRodape();
-					gotoxy(54, 29); printf("REGISTRO DELETADO, OK!");
+					gotoxy(49, 29); printf("REGISTRO DELETADO, OK!");
 					Sleep(1500);
 					clrRodape();
 					if(CKB_SWITCH) clearkeybuf();
@@ -1234,7 +1262,7 @@ void excLogicaNotas(char nomeArq[])
 			}
 			else{
 				clrRodape();
-				gotoxy(53, 29); printf("NAO ENCONTRADO!");
+				gotoxy(53, 29); printf("NAO ENCONTRADO!"); //TESTAR
 				Sleep(1500);
 				clrRodape();
 				if(CKB_SWITCH) clearkeybuf();
@@ -1243,6 +1271,9 @@ void excLogicaNotas(char nomeArq[])
 		
 	}
 	fclose(ptrNota);
+	fclose(ptrDis);
+	fclose(ptrAlu);
+	fclose(ptrRel);
 }
 
 void excFisicaNotas(char nomeArq[])
