@@ -1243,6 +1243,7 @@ void excLogicaNotas(char nomeNota[], char nomeAlu[], char nomeDis[], char nomeRe
 					pos = buscaBinariaDis(ptrDis, regNotas.notaDisCod);
 					fseek(ptrDis, pos, SEEK_SET);
 					fread(&regDis, sizeof(tpDis), 1, ptrDis);
+					regDis.somaNotas -= regNotas.nota;
 					regDis.qtdeReg--;
 					if(regDis.qtdeReg == 0)
 						regRel.qtdeDis--;
@@ -1866,8 +1867,8 @@ void consDisNome(char nomeArq[])
 	int pos, posY = 6, posX = 4;
 	
 	clrTittle();
-	gotoxy(54, 3); printf("CONSULTA DISCIPLINA NOME");
-	gotoxy(48, 4); printf("(BUSCA SENTINELA)");
+	gotoxy(48, 3); printf("CONSULTA DISCIPLINA NOME");
+	gotoxy(51, 4); printf("(BUSCA SENTINELA)");
 	
 	clrCorpo();
 	textcolor(COR_DIS);
