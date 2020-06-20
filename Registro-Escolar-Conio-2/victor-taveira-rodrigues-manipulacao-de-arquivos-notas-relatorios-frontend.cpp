@@ -367,14 +367,14 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	
-	clrCorpo();
+	/*clrCorpo();
 	textcolor(COR_REL);
 	gotoxy(posX, posY++); printf("qtdeDis: %d", regRel.qtdeDis);
 	gotoxy(posX, posY++); printf("qtdeAlu: %d", regRel.qtdeAlu);
 	gotoxy(posX, posY++); printf("somaQtdeRegNotas: %d", regRel.somaQtdeRegNotas);
-	getch();
+	getch();*/
 	
-	/*if(feof(ptrNota)){
+	if(feof(ptrNota)){
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(1500);
@@ -458,7 +458,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 			
 			getch();
 		}
-	}*/
+	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
@@ -1480,8 +1480,8 @@ void altNotas(char nomeArq[])
 	FILE *ptrNota = fopen(nomeArq, "rb+");
 	
 	clrTittle();
-	gotoxy(54, 3); printf("ALTERAR NOTAS - TERMINAR");
-	gotoxy(48, 4); printf("(BUSCA EXAUSTIVA)");
+	gotoxy(54, 3); printf("ALTERAR NOTAS");
+	gotoxy(52, 4); printf("(BUSCA EXAUSTIVA)");
 	
 	
 	clrCorpo();
@@ -1532,7 +1532,7 @@ void altNotas(char nomeArq[])
 					fwrite(&regNotas, sizeof(tpNotas), 1, ptrNota);
 					
 					clrRodape();
-					gotoxy(54, 29); printf("ALTERADO!");
+					gotoxy(55, 29); printf("ALTERADO!");
 					Sleep(1500);
 					clrRodape();
 					if(CKB_SWITCH) clearkeybuf();
@@ -1544,7 +1544,7 @@ void altNotas(char nomeArq[])
 			else{
 				
 				clrRodape();
-				gotoxy(53, 29); printf("SEM REGISTROS!");
+				gotoxy(48, 29); printf("INFORMACAO NAO ENCONTRADA!");
 				Sleep(1500);
 				clrRodape();
 				if(CKB_SWITCH) clearkeybuf();
@@ -2119,6 +2119,7 @@ void relNotas(char nomeArq[])
 		
 		if(regSize > 22)
 		{	
+			textbackground(BLACK);
 			system("cls");
 			desenharLayout(30 + (regSize - 22));
 		}
