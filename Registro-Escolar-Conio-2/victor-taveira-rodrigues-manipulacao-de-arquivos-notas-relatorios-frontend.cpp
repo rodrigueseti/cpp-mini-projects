@@ -20,7 +20,7 @@
 #define COR_NOTA           BLUE
 #define COR_REL            BLUE
 
-#define CKB_SWITCH 0
+#define CKB_SWITCH 1
 #define MSG_TIME   1500
 
 struct tpAluno {
@@ -75,10 +75,9 @@ void altDis(char nomeArq[]);
 void altNotas(char nomeArq[]);
 
 void excFisAlunos(char nomeArq[]);
-void excFisDisciplina(char nomeArq[]);
+void excFisDisciplina(char arqDis[], char arqAlu[], char arqNota[], char arqRel[]);
 void excFisicaNotas(char nomeArq[]);
 void excLogicaNotas(char nomeNota[], char nomeAlu[], char nomeDis[], char nomeRel[]);
-
 
 void ordenaAlunos(char nomeArq[]);
 
@@ -97,6 +96,7 @@ int buscaBinariaAluno(FILE *ptrAluno, char ra[]);
 int buscaBinariaDis(FILE *ptrDis, int codAux);
 int buscaSentinelaDisNome(FILE *ptrDis, char nome[]);
 int buscaExaustivaNotas(FILE *ptrNota, char ra[], int codAux);
+int buscaExaustivaNotasCod(FILE *ptrNota, int codAux);
 
 void removerSentinela(char nomeArq[]);
 
@@ -112,7 +112,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[], char arq
 
 int main(){
 	
-	system("title MANIPULACAO DE ARQUIVOS VICTOR TAVEIRA RODRIGUES");
+	system("title MANIPULACAO DE ARQUIVOS VICTOR TAVEIRA RODRIGUES - RA: 261911759");
 	char opcao;
 	//fullscreen();
 	desenharLayout();
@@ -169,7 +169,7 @@ int main(){
 				break;
 				
 			case 'L' :
-				excFisDisciplina("Disciplinas.dat");
+				excFisDisciplina("Disciplinas.dat", "Alunos.dat", "Notas.dat", "Relatorios.dat");
 				break;
 				
 			case 'M' :
@@ -368,14 +368,14 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 	fread(&regRel, sizeof(tpRel), 1, ptrRel);
 	
-	clrCorpo();
+	/*clrCorpo();
 	textcolor(COR_REL);
 	gotoxy(posX, posY++); printf("qtdeDis: %d", regRel.qtdeDis);
 	gotoxy(posX, posY++); printf("qtdeAlu: %d", regRel.qtdeAlu);
 	gotoxy(posX, posY++); printf("somaQtdeRegNotas: %d", regRel.somaQtdeRegNotas);
-	getch();
+	getch();*/
 	
-	/*if(feof(ptrNota)){
+	if(feof(ptrNota)){
 		clrRodape();
 		gotoxy(53, 29); printf("SEM REGISTROS!");
 		Sleep(MSG_TIME);
@@ -459,7 +459,7 @@ void disciplinasAlunos(char nomeAlu[], char nomeDis[], char nomeNota[],  char ar
 			
 			getch();
 		}
-	}*/
+	}
 	fclose(ptrAlu);
 	fclose(ptrDis);
 	fclose(ptrNota);
@@ -886,6 +886,7 @@ void insercaoDireta(FILE *ptrDis)
 		fseek(ptrDis, (pos - 1) * sizeof(tpDis), SEEK_SET);
 		fread(&regDisI, sizeof(tpDis), 1, ptrDis);
 		fread(&regDisJ, sizeof(tpDis), 1, ptrDis);
+		
 		while(pos > 0 && regDisJ.disCod < regDisI.disCod)
 		{
 			fseek(ptrDis, (pos - 1) * sizeof(tpDis), SEEK_SET);
@@ -1042,8 +1043,6 @@ int buscaSentinelaDisNome(FILE *ptrDis, char nome[])
 
 void ordenaAlunos(char nomeArq[]) 
 {
-	
-	
 	clrRodape();
 	gotoxy(54, 29); printf("(NOME CRESCENTE) ORDENANDO ARQUIVO: %s...", nomeArq);
 	Sleep(MSG_TIME);
@@ -1313,21 +1312,23 @@ void excFisicaNotas(char nomeArq[])
 	
 }
 
-void excFisDisciplina(char nomeArq[])
+//void cadastroNotas("Notas.dat", "Disciplinas.dat", "Alunos.dat", "Relatorios.dat");
+void excFisDisciplina(char arqDis[], char arqAlu[], char arqNota[], char arqRel[])
 {
 	// FUNCAO COMPLETA
 	tpDis regDis;
-	int pos, posY = 6, posX = 4, codAux;   
+	int pos, posY = 6, posX = 4, codAux, posDis;   
 	
-	FILE *ptrDis = fopen(nomeArq, "rb");
+	FILE *ptrDis = fopen(arqDis, "rb");
+	FILE *ptrNota = fopen(arqNota, "rb");
 	
 	clrTittle();
-	gotoxy(54, 3); printf("EXCLUIR DADOS DE DISCIPLINAS");
-	gotoxy(48, 4); printf("(BUSCA BINARIA POR CODIGO ORDENADO)");
+	gotoxy(46, 3); printf("EXCLUIR DADOS DE DISCIPLINAS");
+	gotoxy(42, 4); printf("(BUSCA BINARIA POR CODIGO ORDENADO)");
 	
 	clrCorpo();
 	textcolor(COR_DIS);
-	gotoxy(posX, posY); printf("CODIGO: ");
+	gotoxy(posX, posY++); printf("CODIGO: ");
 	scanf("%d", &codAux);
 	
 	if(codAux > 0) 
@@ -1338,49 +1339,64 @@ void excFisDisciplina(char nomeArq[])
 		
 		if (pos > -1) 
 		{
+			posDis = buscaExaustivaNotasCod(ptrNota, codAux);
+			gotoxy(posX, posY); printf("posDis: %d", posDis);
+			getch();
 			
-			fseek(ptrDis, pos, 0);
-			fread(&regDis, sizeof(tpDis), 1, ptrDis);
-			
-			gotoxy(posX, posY);        printf("CODIGO: %d", regDis.disCod);
-			gotoxy(posX + 30, posY++); printf("DISCIPLINA: %s", regDis.disNome);
-			
-			clrRodape();
-			gotoxy(50, 29); printf("EXCLUIR ? (S/N)");
-			
-			if(toupper(getch()) == 'S') {
-				
-				clrRodape();
-				FILE *ptrTemp = fopen("temp.dat", "wb");
-				
-				rewind(ptrDis); 
-				//or 
-				//fseek(ptrAluno, 0, 0);
-				
-				fread(&regDis, sizeof(tpDis), 1, ptrDis);
-				
-				while(!feof(ptrDis)) 
-				{
-					if(regDis.disCod != codAux)
-						fwrite(&regDis, sizeof(tpDis), 1, ptrTemp);
-						
-					fread(&regDis, sizeof(tpDis), 1, ptrDis);
-				}
-				fclose(ptrDis);
-				fclose(ptrTemp);
-				
-				remove(nomeArq);
-				rename("temp.dat", nomeArq);
-				
-				clrRodape();
-				gotoxy(54, 29); printf("REGISTRO DELETADO, OK!");
-				Sleep(MSG_TIME);
-				if(CKB_SWITCH) clearkeybuf();
-				clrRodape();
+			if(posDis > -1){
+				    clrRodape();
+				    gotoxy(42, 29); printf("REMOVA O REGISTRO EM NOTAS PRIMEIRO");
+				    Sleep(MSG_TIME);
+				    if(CKB_SWITCH) clearkeybuf();
+				    clrRodape();
+				    fclose(ptrDis);
+				    fclose(ptrNota);
 			}
 			else{
-				clrRodape();
-				fclose(ptrDis);
+				fseek(ptrDis, pos, 0);
+			    fread(&regDis, sizeof(tpDis), 1, ptrDis);
+			
+			    gotoxy(posX, posY);        printf("CODIGO: %d", regDis.disCod);
+		    	gotoxy(posX + 30, posY++); printf("DISCIPLINA: %s", regDis.disNome);
+			
+		    	clrRodape();
+		    	gotoxy(52, 29); printf("EXCLUIR ? (S/N)");
+			
+		    	if(toupper(getch()) == 'S') 
+				{
+				    clrRodape();
+				    FILE *ptrTemp = fopen("temp.dat", "wb");
+				
+				    rewind(ptrDis); 
+					//or 
+					//fseek(ptrAluno, 0, 0);
+				
+				    fread(&regDis, sizeof(tpDis), 1, ptrDis);
+				
+				    while(!feof(ptrDis)) 
+				    {
+					    if(regDis.disCod != codAux)
+						    fwrite(&regDis, sizeof(tpDis), 1, ptrTemp);
+					    fread(&regDis, sizeof(tpDis), 1, ptrDis);
+				    }
+				    fclose(ptrDis);
+				    fclose(ptrTemp);
+				    fclose(ptrNota);
+				
+				    remove(arqDis);
+				    rename("temp.dat", arqDis);
+				
+				    clrRodape();
+				    gotoxy(49, 29); printf("REGISTRO DELETADO, OK!");
+				    Sleep(MSG_TIME);
+				    if(CKB_SWITCH) clearkeybuf();
+				    clrRodape();
+			    }
+			    else{
+				        clrRodape();
+				        fclose(ptrDis);
+				        fclose(ptrNota);
+			        }
 			}
 		}
 		else{
@@ -1389,10 +1405,15 @@ void excFisDisciplina(char nomeArq[])
 			Sleep(MSG_TIME);
 			if(CKB_SWITCH) clearkeybuf();
 			clrRodape();
+			fclose(ptrDis);
+			fclose(ptrNota);
 		}
 	}
-	else
+	else{
 		fclose(ptrDis);
+		fclose(ptrNota);
+	}
+		
 }
 
 void altDis(char nomeArq[]) 
@@ -1996,28 +2017,46 @@ int buscaAluno(FILE *ptrAluno, char ra[]) {
 	// fteel, posicaoo atual do ponteiro
 	return ftell(ptrAluno) - sizeof(tpAluno);
 }
+
+
+int buscaExaustivaNotasCod(FILE *ptrNota, int codAux)
+{
+	tpNotas regNota;
+	//rewind(ptrNota);
+	fseek(ptrNota, 0, SEEK_SET);
+	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+	
+	while(!feof(ptrNota) && (codAux != regNota.notaDisCod || regNota.status == 0))
+		fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+		
+	if(feof(ptrNota))
+		return -1;
+	return ftell(ptrNota) - sizeof(tpNotas);
+}
+
+int buscaExaustivaNotasRa(FILE *ptrNota, char ra[])
+{	
+	tpNotas regNota;
+	rewind(ptrNota);
+	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+	
+	while(!feof(ptrNota) && (stricmp(ra, regNota.notaRa) != 0 || regNota.status == 0))
+		fread(&regNota, sizeof(tpNotas), 1, ptrNota);
+		
+	if(feof(ptrNota))
+		return -1;
+	return ftell(ptrNota) - sizeof(tpNotas);
+}
+
 int buscaExaustivaNotas(FILE *ptrNota, char ra[], int codAux)
 {	
-	//printf("\nStep1");
 	tpNotas regNota;
-	//printf("\nStep2");
 	rewind(ptrNota);
-	//printf("\nStep3");
 	fread(&regNota, sizeof(tpNotas), 1, ptrNota);
-	//printf("\nStep4");
-	//if(feof(ptrNota))
-	//	printf("\nFim");
 	
 	while(!feof(ptrNota) && (stricmp(ra, regNota.notaRa) != 0 || codAux != regNota.notaDisCod || regNota.status == 0))
 		fread(&regNota, sizeof(tpNotas), 1, ptrNota);
 		
-	/*printf("\nStep5");
-	if(feof(ptrNota))
-		printf("\nNao encotrou primeiro reg");
-	else
-		printf("\nEncontrou Primeiro reg");
-	getch();*/
-	
 	if(feof(ptrNota))
 		return -1;
 	return ftell(ptrNota) - sizeof(tpNotas);
@@ -2381,7 +2420,6 @@ void cadastroNotas(char arqNota[], char arqDis[], char arqAlu[], char arqRel[])
 						fseek(ptrRel, 0, SEEK_SET);
 						fread(&regRel, sizeof(tpRel), 1, ptrRel); //LE STRUCT RELATORIO
 						
-						
 						fseek(ptrAluno, posAlu, SEEK_SET);
 						fread(&regAlu, sizeof(tpAluno), 1, ptrAluno);
 						if(regAlu.qtdeReg == 0) // QUANTAS VEZES DIFERENTES ALUNOS FORAM REGISTRADAS EM NOTAS, O VALOR MAXIMO, SERA O VALOR MAXIMO DE ALUNOS REGISTRADOS
@@ -2526,7 +2564,7 @@ char menu(void)
 	/*textbackground(COR_FUNDO_TITULO);
 	textcolor(COR_TITULO);*/
 	gotoxy(43, 3); printf("CADASTRO ALUNOS DISCIPLINAS E NOTAS");
-	gotoxy(35, 4); printf("Encoded by: Victor Taveira - github.com/taveiradev");
+	gotoxy(28, 4); printf("by: Victor Taveira - github.com/rodrigueseti/cpp-mini-projects");
 	
 	short int posY = 9, posX = 20;
 	
