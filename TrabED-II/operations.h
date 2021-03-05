@@ -26,7 +26,9 @@ void buildUnit(Dir **uni)
 			aux = aux->bottom;
 		
 		newUnit->unidade = aux->unidade + 1; //Considerando que esteja na ultima letra
-		*newUnit->top = aux;
+		newUnit->top = aux;
 		aux->bottom = newUnit;
 	}
 }
+
+
