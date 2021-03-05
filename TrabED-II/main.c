@@ -5,7 +5,8 @@
 
 int main()
 {
-	printf("Ok");
+	Dir *unidade = NULL;
+	
 	
 	return 0;
 }
