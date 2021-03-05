@@ -5,8 +5,10 @@
 
 int main()
 {
-	Dir *unidade = NULL;
+	Dir *unidade; 
+	initDir(&unidade); //Initializing
 	
-	
+	buildUnit(&unidade); //Build Unit C:
+	buildUnit(&unidade); //Build Unit D:
 	return 0;
 }
