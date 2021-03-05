@@ -9,7 +9,7 @@ union ponteiroDadosUniao
 
 struct ponteiroDados
 {
-    union ponteiroDadosUniao *valor;
+    union ponteiroDadosUniao valor;
     struct ponteiroDados *prox;
 };
 typedef struct ponteiroDados pDados;
