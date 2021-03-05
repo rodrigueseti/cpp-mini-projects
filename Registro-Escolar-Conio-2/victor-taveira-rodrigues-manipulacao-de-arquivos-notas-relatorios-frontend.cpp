@@ -226,12 +226,12 @@ int main(){
 	
 	return 0;
 }
-void clearkeybuf (void)
+/*void clearkeybuf (void)
 {
     while (kbhit()) {
         getch();
     }
-}
+}*/
 
 
 void clrTittle()
