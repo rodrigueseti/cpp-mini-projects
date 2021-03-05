@@ -1,23 +1,26 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h> //strcpy()
+#include <time.h> //time(), localtime();
 #include "Tad.h"
 #include "operations.h"
 
 int main()
 {
-	Dir *unidade; 
-	initDir(&unidade); //Initializing
+	Dir *unid; 
+	initDir(&unid); //Initializing
 	
 	//Build Unit Test
-	/*buildUnit(&unidade); //Build Unit C:
-	printf("LETRA: %c", unidade->unidade);
+	buildUnit(&unid); //Build Unit C:
+	buildUnit(&unid); //Build Unit D:
+	buildUnit(&unid); //Build Unit E:
 	
+	printf("LETRA: %c\n", unid->letter);
+	create(&unid, "CLIENTES.DBF");
 	
-	buildUnit(&unidade); //Build Unit D:
-	printf("\nLETRA: %c", unidade->unidade);
-	printf("\nLETRA: %c", unidade->bottom->unidade);
+	printf("\n%s", unid->arqs->nomeDBF);
+	printf("\n%s", unid->arqs->data);
+	printf("\n%s", unid->arqs->hora);
 	
-	buildUnit(&unidade); //Build Unit E:
-	printf("\nLETRA: %c", unidade->bottom->bottom->unidade);*/
 	return 0;
 }
