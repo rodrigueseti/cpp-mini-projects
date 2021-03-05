@@ -52,7 +52,7 @@ typedef struct arquivo Arq;
 struct unidade{
 	
 	struct unidade *top;
-    char unidade[2]; //Definir
+    char unidade; //Definir
     struct arquivo *arqs;
     struct unidade *bottom;
 };
