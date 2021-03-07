@@ -6,7 +6,7 @@ void initDir(Dir **uni)
 	*uni = NULL;
 }
 
-const char getDate(char date[])
+void getDate(char date[])
 {
 	struct tm *p;
     time_t seconds;
