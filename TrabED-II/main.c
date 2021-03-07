@@ -16,6 +16,8 @@ int main()
 	buildUnit(&unid); //Build Unit E:
 	
 	printf("LETRA: %c\n", unid->letter);
+	printf("LETRA: %c\n", unid->bottom->letter);
+	printf("LETRA: %c\n", unid->bottom->bottom->letter);
 	create(&unid, "CLIENTES.DBF");
 	
 	printf("\n%s", unid->arqs->nomeDBF);

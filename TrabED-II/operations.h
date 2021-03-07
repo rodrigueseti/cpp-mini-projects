@@ -21,17 +21,16 @@ void getHour(char hour[])
     time_t seconds;
     time(&seconds);
     p = localtime(&seconds);
-    
     sprintf(hour, "%d:%d:%d\0", p->tm_hour, p->tm_min, p->tm_sec);
 }
 
 
 void buildUnit(Dir **uni)
 {
-	Dir *newUnit = (Dir*) malloc(sizeof(Dir));
-	newUnit->bottom = NULL;
-	newUnit->arqs = NULL;
 	Dir *aux = *uni;
+	Dir *newUnit = (Dir*) malloc(sizeof(Dir));
+	newUnit->bottom = newUnit->top = NULL;
+	newUnit->arqs = NULL;
 	
 	//Primeira Caixa
 	if(*uni == NULL)
@@ -59,14 +58,30 @@ void create (Dir **uni, char name[])
 	getDate(date);
 	getHour(hour);
 	
+	
+	Arq *aux = (*uni)->arqs;
 	Arq *newDBF = (Arq*) malloc (sizeof(Arq));
-	newDBF->ant = NULL;
+	
 	strcpy(newDBF->nomeDBF, name);
 	strcpy(newDBF->data, date);
 	strcpy(newDBF->hora, hour);
+	
 	newDBF->stts = NULL;
 	newDBF->cmps = NULL;
 	newDBF->prox = NULL;
 	
-	(*uni)->arqs = newDBF;
+	//Primeiro Arquivo
+	if((*uni)->arqs == NULL)
+	{
+		newDBF->ant = NULL;
+		(*uni)->arqs = newDBF;
+	}
+	else{ //Demais Arquivos
+		
+		while(aux->prox != NULL)
+			aux = aux->prox;
+			
+		newDBF->ant = aux;
+		aux->prox = newDBF;
+	}
 }
