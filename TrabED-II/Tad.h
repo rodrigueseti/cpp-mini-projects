@@ -9,7 +9,7 @@ union ponteiroDadosUniao
 
 struct ponteiroDados
 {
-    union ponteiroDadosUniao *valor;
+    union ponteiroDadosUniao valor;
     struct ponteiroDados *prox;
 };
 typedef struct ponteiroDados pDados;
@@ -37,10 +37,10 @@ typedef struct status Status;
 
 struct arquivo {
 	
-    struct arquivo *ant; 
+    struct arquivo *ant;
     char nomeDBF[40];
-    char data[10]; //Pegar data atual do sistema
-	char hora[5];  //Pegar hora atual do sistema 
+    char data[9]; //Pegar data atual do sistema
+	char hora[9];  //Pegar hora atual do sistema 
 	
 	struct status *stts;
 	struct campos *cmps;
@@ -52,7 +52,7 @@ typedef struct arquivo Arq;
 struct unidade{
 	
 	struct unidade *top;
-    char unidade[2]; //Definir
+    char letter; //Definir
     struct arquivo *arqs;
     struct unidade *bottom;
 };
