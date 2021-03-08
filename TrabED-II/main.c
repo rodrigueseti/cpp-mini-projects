@@ -1,5 +1,5 @@
 #include <stdio.h>
-#include <stdlib.h>
+#include <stdlib.h> //strtof();
 #include <string.h> //strcpy()
 #include <time.h> //time(), localtime();
 #include "tad.h"

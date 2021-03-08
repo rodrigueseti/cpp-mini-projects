@@ -1,10 +1,10 @@
 union ponteiroDadosUniao
 {
-    float ValorN;
-    char ValorD[10];
-    char ValorL;
-    char ValorC[50];
-    char ValorM[50];
+    float valorN;
+    char valorD[10];
+    char valorL;
+    char valorC[50];
+    char valorM[50];
 };
 
 struct ponteiroDados

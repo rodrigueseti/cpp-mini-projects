@@ -50,7 +50,7 @@ void buildUnit(Dir **uni)
 }
 
 //Apos criado, o arquivo.DBF é aberto, para insercoes de dados
-void createNewDBF (Dir **uni, char name[])
+void createNewDBF (Dir **uni, char name[]) //nao necessario passagem por referencia
 {
 	char date[9];
 	char hour[9];
@@ -141,4 +141,54 @@ void createNewStatus (Arq *open_file)
 	}
 }
 
+void createNewCell (Campos *open_field, char info[])
+{
+	pDados *aux;
+	pDados *reg = (pDados*) malloc (sizeof(pDados));
+	reg->prox = NULL;
+	
+	
+	switch (open_field->type)
+	{
+		case 'N' :
+		case 'n' : {
+			reg->valor.valorN = strtof(info, NULL);
+			break;
+		}
+		case 'D' :
+		case 'd' : {
+			strcpy(reg->valor.valorD, info);
+			break;
+		}
+		case 'L' :
+		case 'l' : {
+			reg->valor.valorL = info[0];
+			break;
+		}
+		case 'C' :
+		case 'c' : {
+			strcpy(reg->valor.valorC, info);
+			break;
+		}
+		case 'M' :
+		case 'm' : {
+			strcpy(reg->valor.valorM, info);
+			break;
+		}
+	}
+	
+	if (open_field->p_dados == NULL)
+	{
+		open_field->p_dados = reg;
+		open_field->pAtual  = reg;
+	}
+	else {
+		
+		aux = open_field->p_dados;
+		while (aux->prox != NULL)
+			aux = aux->prox;
+			
+		aux->prox = reg;
+	}
+}
 
