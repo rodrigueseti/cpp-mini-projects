@@ -4,6 +4,7 @@
 #include <time.h> //time(), localtime();
 #include "tad.h"
 #include "operations.h"
+#include "manipulations.h"
 
 int main()
 {

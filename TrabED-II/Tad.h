@@ -1,4 +1,4 @@
-union ponteiroDadosUniao
+union dados
 {
     float valorN;
     char valorD[10];
@@ -9,14 +9,14 @@ union ponteiroDadosUniao
 
 struct ponteiroDados
 {
-    union ponteiroDadosUniao valor;
+    union dados valor;
     struct ponteiroDados *prox;
 };
 typedef struct ponteiroDados pDados;
 
 struct campos{
 	
-    struct campos *pAtual;
+    struct ponteiroDados *pAtual;
 	
     char fieldName[20]; 
 	char type; //Definir
