@@ -50,7 +50,7 @@ void buildUnit(Dir **uni)
 }
 
 //Apos criado, o arquivo.DBF é aberto, para insercoes de dados
-void create (Dir **uni, char name[])
+void createNewDBF (Dir **uni, char name[])
 {
 	char date[9];
 	char hour[9];
@@ -59,7 +59,8 @@ void create (Dir **uni, char name[])
 	getHour(hour);
 	
 	
-	Arq *aux = (*uni)->arqs;
+	//Arq *aux = (*uni)->arqs;
+	Arq *aux; //= (*uni)->arqs;
 	Arq *newDBF = (Arq*) malloc (sizeof(Arq));
 	
 	strcpy(newDBF->nomeDBF, name);
@@ -77,6 +78,8 @@ void create (Dir **uni, char name[])
 		(*uni)->arqs = newDBF;
 	}
 	else{ //Demais Arquivos
+	
+		aux = (*uni)->arqs;
 		
 		while(aux->prox != NULL)
 			aux = aux->prox;
@@ -85,3 +88,57 @@ void create (Dir **uni, char name[])
 		aux->prox = newDBF;
 	}
 }
+
+
+//Recebe o ponteiro onde o arquivo DBF esta aberto
+void createNewField (Arq *open_file, char name[], char type, int width, int dec)
+{
+	Campos *aux;
+	Campos *newField = (Campos*) malloc (sizeof(Campos));
+	
+	newField->pAtual = NULL;
+	strcpy(newField->fieldName, name);
+	newField->type = type;
+	newField->width = width;
+	newField->dec = dec;
+	newField->p_dados = NULL;
+	newField->prox = NULL;
+	
+	if (open_file->cmps == NULL)
+	{
+		open_file->cmps = newField;
+	}
+	else
+	{
+		aux = open_file->cmps;
+		while(aux->prox != NULL)
+			aux = aux->prox;
+		
+		aux->prox = newField;
+	}
+}
+
+
+void createNewStatus (Arq *open_file)
+{
+	Status *aux;
+	Status *newStts = (Status*) malloc (sizeof(Status));
+	
+	newStts->status = 1;
+	newStts->prox = NULL;
+	
+	if(open_file->stts == NULL)
+	{
+		open_file->stts = newStts;
+	}
+	else{
+		
+		aux = open_file->stts;
+		while (aux->prox != NULL)
+			aux = aux->prox;
+		
+		aux->prox = newStts;
+	}
+}
+
+

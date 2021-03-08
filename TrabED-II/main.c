@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h> //strcpy()
 #include <time.h> //time(), localtime();
-#include "Tad.h"
+#include "tad.h"
 #include "operations.h"
 
 int main()
@@ -18,7 +18,7 @@ int main()
 	printf("LETRA: %c\n", unid->letter);
 	printf("LETRA: %c\n", unid->bottom->letter);
 	printf("LETRA: %c\n", unid->bottom->bottom->letter);
-	create(&unid, "CLIENTES.DBF");
+	createNewDBF(&unid, "CLIENTES.DBF");
 	
 	printf("\n%s", unid->arqs->nomeDBF);
 	printf("\n%s", unid->arqs->data);
