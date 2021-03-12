@@ -24,8 +24,6 @@ void trim (char res[])
 	int y = strlen(res) - 1;
 	char aux[50];
 	
-	
-	
 	while(res[x] != '\0' && res[x] == ' ')
 		x++;
 		
@@ -40,12 +38,13 @@ void trim (char res[])
 	strcpy(res, aux);
 }
 
-int SeparaComando(char digitado[], char comando[], char res[])
+int SeparaComando(char digitado[], const char comando[], char res[])
 {
 	char aux[50];
 	int pos = 0;
 	
-	while(toupper(digitado[pos]) == toupper(comando[pos]) && digitado[pos] != '\0' && comando[pos] != '\0'){
+	while(toupper(digitado[pos]) == toupper(comando[pos]) && digitado[pos] != '\0' && comando[pos] != '\0')
+	{
 		aux[pos] = comando[pos];
 		pos++;
 	}
@@ -66,8 +65,6 @@ int SeparaComando(char digitado[], char comando[], char res[])
 	return 0;	
 }
 
-
-
 void field_param(char field[], char digitado[])
 {
 	int i = 0;
@@ -83,118 +80,106 @@ void field_param(char field[], char digitado[])
 }
 
 //Recebe a string e a trata para a função 
-int Compara_String(char comando[], char valor[])
+int Compara_String(char comando_field[], char valor[])
 {
 	/* ISSUES
 	*verificar se atributo passado a uma funcao que faz uso da mesma, nao esta vazio
-	*
+	*testar
 	*/
 	
-	char setdef[] = "SET DEFAULT TO";
-	char create[] = "CREATE";
-	char use[] = "USE";
-	char locate[] = "LOCATE FOR";
-	char list_nome[] = "LIST FOR";
-	char gt[] = "GOTO";
+	char res[50];
+	const char gt[] = "GOTO";
+	const char use[] = "USE";
+	const char create[] = "CREATE";
+	const char locate[] = "LOCATE FOR";
+	const char list_nome[] = "LIST FOR";
+	const char setdef[] = "SET DEFAULT TO";
 	
-	char res[50], aux[50];
-	trim(comando);
+	trim(comando_field);
 	
-	if(!stricmp(comando, "DISPLAY")) //Ok
+	if(!stricmp(comando_field, "ZAP")) //Ok
 		return 1;
-		
-	if(!stricmp(comando, "EDIT")) //Ok
+	
+	if(!stricmp(comando_field, "DIR")) //Ok
 		return 2;
 		
-	if(!stricmp(comando, "DELETE")) //Ok
+	if(!stricmp(comando_field, "QUIT")) //Ok
 		return 3;
 		
-	if(!stricmp(comando, "DELETE ALL")) //Ok
+	if(!stricmp(comando_field, "EDIT")) //Ok
 		return 4;
 	
-	if(!stricmp(comando, "RECALL")) //Ok
+	if(!stricmp(comando_field, "PACK")) //Ok
 		return 5;
-		
-	if(!stricmp(comando, "RECALL ALL")) //Ok
+	
+	if(!stricmp(comando_field, "SORT")) //Ok
 		return 6;
-	
-	if(!stricmp(comando, "SET DELETED ON")) //Ok
+			
+	if(!stricmp(comando_field, "LIST")) //Ok
 		return 7;
-
-	if(!stricmp(comando, "SET DELETED OFF")) //Ok
+		
+	if(!stricmp(comando_field, "CLEAR")) //Ok
 		return 8;
-	
-	if(!stricmp(comando, "PACK")) //Ok
+		
+	if(!stricmp(comando_field, "RECALL")) //Ok
 		return 9;
 	
-	if(!stricmp(comando, "ZAP")) //Ok
+	if(!stricmp(comando_field, "DELETE")) //Ok
 		return 10;
 		
-	if(!stricmp(comando, "MODIFY STRUCTURE")) //Ok
+	if(!stricmp(comando_field, "APPEND")) //Ok
 		return 11;
-	
-	if(!stricmp(comando, "SORT")) //Ok
+		
+	if(!stricmp(comando_field, "DISPLAY")) //Ok
 		return 12;
 		
-	if(!stricmp(comando, "DIR")) //Ok
+	if(!stricmp(comando_field, "DELETE ALL")) //Ok
 		return 13;
-	
-	if(!stricmp(comando, "QUIT")) //Ok
+		
+	if(!stricmp(comando_field, "RECALL ALL")) //Ok
 		return 14;
-		
-	if(!stricmp(comando, "LIST STRUCTURE")) //Ok
+	
+	if(!stricmp(comando_field, "SET DELETED ON")) //Ok
 		return 15;
-			
-	if(!stricmp(comando, "APPEND")) //Ok
+	
+	if(!stricmp(comando_field, "LIST STRUCTURE")) //Ok
 		return 16;
-			
-	if(!stricmp(comando, "LIST")) //Ok
-		return 17;
 		
-	if(!stricmp(comando, "CLEAR")) //Ok
+	if(!stricmp(comando_field, "SET DELETED OFF")) //Ok
+		return 17;
+	
+	if(!stricmp(comando_field, "MODIFY STRUCTURE")) //Ok
 		return 18;
 	
+	if(SeparaComando(comando_field, create, res)) //Ok
+	{
+		strcpy(valor, res);
+		return 19;
+	}
 	
-	
-	if(SeparaComando(comando, create, res)) //Ok
+	if(SeparaComando(comando_field, use, res)) //Ok
 	{
 		strcpy(valor, res);
 		return 20;
 	}
 	
-	if(SeparaComando(comando, use, res)) //Ok
+	if(SeparaComando(comando_field, gt, res)) //Ok
 	{
 		strcpy(valor, res);
 		return 21;
 	}
 	
-	if(SeparaComando(comando, gt, res)) //Ok
-	{
-		strcpy(valor, res);
-		return 24;
-	}
-	
-	if(SeparaComando(comando, setdef, res)) //Ok
+	if(SeparaComando(comando_field, setdef, res)) //Ok
 	{
 		replace(res, ' ');
 		replace(res, ':');
 		strcpy(valor, res);
-		return 19;
-	}
-	
-	if(SeparaComando(comando, list_nome, res)) //Ok
-	{
-		field_param(comando, res);
-		replace(res, '=');
-		replace(res, '\"');
-		trim(res);
-		strcpy(valor, res);
 		return 22;
 	}
 	
-	if(SeparaComando(comando, locate, res)) //Ok
+	if(SeparaComando(comando_field, list_nome, res)) //Ok
 	{
-		field_param(comando, res);
+		field_param(comando_field, res);
 		replace(res, '=');
 		replace(res, '\"');
 		trim(res);
@@ -202,5 +187,14 @@ int Compara_String(char comando[], char valor[])
 		return 23;
 	}
 	
+	if(SeparaComando(comando_field, locate, res)) //Ok
+	{
+		field_param(comando_field, res);
+		replace(res, '=');
+		replace(res, '\"');
+		trim(res);
+		strcpy(valor, res);
+		return 24;
+	}
 	return 0; //Nenhuma das opcoes
 }

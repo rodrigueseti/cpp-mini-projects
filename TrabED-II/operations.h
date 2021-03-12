@@ -1,6 +1,5 @@
 //TAD Manipulacoes
 
-
 void initDir(Dir **uni)
 {
 	*uni = NULL;

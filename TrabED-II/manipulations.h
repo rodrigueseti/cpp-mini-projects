@@ -1,66 +1,29 @@
 
-
-
-void menu ()
+int trocaUnidade (Dir **unid, char letra)
 {
+	/*
+	*return 1 - successfully
+	*return 0 - unsuccessfully
+	*/
 	
-	int opc;
-	char comando_field[50];
-	char valor[50];
-	valor[0] = '\0';
+	Dir *aux = *unid;
+	while(aux->top != NULL && aux->letter != letra)
+		aux = aux->top;
 	
-	
-	printf(". ");
-	fflush(stdin);
-	gets(comando_field);
-	opc = Compara_String(comando_field, valor);
-	
-	printf("comando_field [%s]", comando_field);
-	printf("\nvalor [%s]", valor);
-	
-	/*while(opc != 4))
+	if(aux->letter == letra)
 	{
-		switch (opc)
-		{
-			case 1 : {
-				
-				break;
-			}
-			case 2 : {
-				
-				break;
-			}
-			case 3 : {
-				
-				break;
-			}
-			case 4 : {
-				
-				break;
-			}
-			case 5 : {
-				
-				break;
-			}
-			case 6 : {
-				
-				break;
-			}
-			case 7 : {
-				
-				break;
-			}
-			case 8 : {
-				
-				break;
-			}
-			default :
-				printf("Comando Invalido");
-		}
+		*unid = aux;
+		return 1;
+	}
 		
-		puts(". ");
-		fflush(stdin);
-		gets(input);
-		opc = Compara_String(comando, valor);
-	}*/
+	aux = *unid;
+	while(aux->bottom != NULL && aux->letter != letra)
+		aux = aux->bottom;
+		
+	if(aux->letter == letra)
+	{
+		*unid = aux;
+		return 1;
+	}
+	return 0;
 }
