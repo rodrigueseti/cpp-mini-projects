@@ -49,7 +49,7 @@ void buildUnit(Dir **uni)
 }
 
 //Apos criado, o arquivo.DBF é aberto, para insercoes de dados
-void createNewDBF (Dir **uni, char name[]) //nao necessario passagem por referencia
+Arq *createNewDBF (Dir *uni, char name[]) //nao necessario passagem por referencia
 {
 	char date[9];
 	char hour[9];
@@ -71,14 +71,14 @@ void createNewDBF (Dir **uni, char name[]) //nao necessario passagem por referen
 	newDBF->prox = NULL;
 	
 	//Primeiro Arquivo
-	if((*uni)->arqs == NULL)
+	if(uni->arqs == NULL)
 	{
 		newDBF->ant = NULL;
-		(*uni)->arqs = newDBF;
+		uni->arqs = newDBF;
 	}
 	else{ //Demais Arquivos
 	
-		aux = (*uni)->arqs;
+		aux = uni->arqs;
 		
 		while(aux->prox != NULL)
 			aux = aux->prox;
@@ -86,6 +86,7 @@ void createNewDBF (Dir **uni, char name[]) //nao necessario passagem por referen
 		newDBF->ant = aux;
 		aux->prox = newDBF;
 	}
+	return newDBF;
 }
 
 

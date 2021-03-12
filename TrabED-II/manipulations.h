@@ -27,3 +27,27 @@ int trocaUnidade (Dir **unid, char letra)
 	}
 	return 0;
 }
+
+Arq *novoArquivo (Dir *unid, char nomeArq[])
+{
+	return createNewDBF(unid, nomeArq);
+}
+
+void listaArquivo (Dir *unid)
+{
+	Arq *aux = unid->arqs;
+	while(aux != NULL)
+	{
+		printf("%s\n", aux->nomeDBF);
+		aux = aux->prox;
+	}
+}
+
+Arq *abrirArquivo (Dir *unid, const char *nomeArq)
+{
+	Arq *aux = unid->arqs;
+	while(aux != NULL && stricmp(aux->nomeDBF, nomeArq))
+		aux = aux->prox;
+		
+	return aux;
+}
