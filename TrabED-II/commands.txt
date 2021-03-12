@@ -1,0 +1,15 @@
+SET DEFAULT TO C:
+CREATE CLIENTES.DBF
+USE CLIENTES.DBF
+LIST FOR NOME = "Jo"
+LOCATE FOR NOME = "Joao da Silva"
+GOTO 2
+
+
+errors
+LOCATE FOR NOME    = "Joao da Silva"
+    = "Joao da Silva"
+ Joao da Silva
+
+
+ LOCATE  FOR   NOME   =    "   Joao da Silva "

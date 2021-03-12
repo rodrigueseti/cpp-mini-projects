@@ -2,13 +2,17 @@
 #include <stdlib.h> //strtof();
 #include <string.h> //strcpy()
 #include <time.h> //time(), localtime();
+#include "tad_comandos.h"
 #include "tad.h"
 #include "operations.h"
 #include "manipulations.h"
 
+
 int main()
 {
-	Dir *unid; 
+	system("title dBase III - Estruturas de Dados II");
+	/*
+	Dir *unid;
 	initDir(&unid); //Initializing
 	
 	//Build Unit Test
@@ -24,6 +28,7 @@ int main()
 	printf("\n%s", unid->arqs->nomeDBF);
 	printf("\n%s", unid->arqs->data);
 	printf("\n%s", unid->arqs->hora);
-	
+	*/
+	menu();
 	return 0;
 }
