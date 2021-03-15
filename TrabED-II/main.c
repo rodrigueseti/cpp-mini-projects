@@ -2,18 +2,23 @@
 #include <stdlib.h> //strtof();
 #include <string.h> //strcpy()
 #include <time.h> //time(), localtime();
+#include <conio2.h>
+
+#include "display.h"
 #include "tad_comandos.h"
 #include "tad.h"
 #include "operations.h"
 #include "manipulations.h"
 
 
+
 int main()
 {
-	system("title dBase III - Estruturas de Dados II");
+	system("title dBase III - Estruturas de Dados II - Help Other Devs");
 	
 	Dir *unid;
-	Arq *arquivo_aberto;
+	Arq *arquivo_aberto = NULL;
+	Entradas en;
 	initDir(&unid); //Initializing
 	
 	buildUnit(&unid); //Build Unit C:
@@ -24,6 +29,8 @@ int main()
 	char comando_field[50];
 	char valor[50];
 	valor[0] = '\0';
+	
+	//show();
 	
 	printf("Diretorio atual: [%c:]\n", unid->letter);
 	printf(". ");
@@ -45,18 +52,24 @@ int main()
 				break;
 			}
 			
-			case 19 : {
-				//Criar DBF
+			case 16 : {
 				
+				listarFields(arquivo_aberto, unid);
+				break;
+			}
+			
+			case 19 : {
+				
+				//Criar DBF
 				novoArquivo(unid, valor);
-				//printf("Arquivo: |%s|\n", unid->arqs->nomeDBF); 
 				printf("Incluir dados ? <Y/N>: ");
 				opc = toupper(getche());
-				printf("\n");
 				
 				if(opc == 'Y')
-					printf("Tela\n");
-				
+				{
+					arquivo_aberto = abrirArquivo(unid, valor);
+					insertFields(arquivo_aberto);
+				}
 				break;
 			}
 			
@@ -73,18 +86,14 @@ int main()
 			}
 			
 			case 22 : {
-				//system("cls"); //Goto
+				arquivo_aberto = NULL;
 				trocaUnidade(&unid, toupper(valor[0]));
-				//printf("Letra atual: %c\n", unid->letter); //Goto
 				printf("Diretorio atual: [%c:]\n", unid->letter);
 				break;
 			}
 			default :
 				printf("Comando Invalido\n");
 		}
-		
-		/*printf("comando_field [%s]\n", comando_field);
-		printf("valor [%s]\n", valor);*/
 		
 		printf(". ");
 		fflush(stdin);
