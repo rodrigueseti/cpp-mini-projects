@@ -116,4 +116,55 @@ void listarFields(Arq *arq, Dir *uni)
 	}
 }
 
+void append (Arq *arq)
+{
+	Campos *aux = arq->cmps;
+	char info[50];
+	
+	if(aux != NULL) //Exibicao das Fields
+	{
+		system("cls");
+		while(aux != NULL)
+		{
+			printf("%s\n", aux->fieldName);
+			aux = aux->prox;
+		}
+		aux = arq->cmps;
+		createNewStatus(arq);
+	}
+	
+	int i = 1;
+	while(aux != NULL)
+	{
+		gotoxy(17, i++);
+		fflush(stdin);
+		gets(info);
+		createNewCell(aux, info);
+		aux = aux->prox;
+	}
+}
 
+void list (Arq *arq) {
+	
+	if(arq->cmps != NULL)
+	{
+		if(arq->cmps->p_dados != NULL)
+		{
+			int i = 0;
+			Campos *auxCmps = arq->cmps;
+			printf("Record#			");
+			
+			while (auxCmps != NULL) 
+			{
+				printf("%s		", auxCmps->fieldName);
+				auxCmps = auxCmps->prox;
+			}
+			
+			while(1)
+			{
+				//CONTINUACAO
+				auxCmps = arq->cmps;				
+			}
+		}
+	}
+}

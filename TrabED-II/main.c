@@ -11,10 +11,17 @@
 #include "manipulations.h"
 
 
+struct pointers {
+	
+	//unidade aberta
+	//arquivo aberto
+	//registro atual
+};
+
 
 int main()
 {
-	system("title dBase III - Estruturas de Dados II - Help Other Devs");
+	system("title dBase III - Estruturas de Dados II - Fipp - By @github.com/taveira @rafa");
 	
 	Dir *unid;
 	Arq *arquivo_aberto = NULL;
@@ -42,37 +49,64 @@ int main()
 	{
 		switch (opc)
 		{
+			//DIR
 			case 2 : {
 				listaArquivo(unid);
 				break;
 			}
 			
+			
+			//LIST
+			case 7 : {
+				list(arquivo_aberto);
+				break;
+			}
+		
+			//CLEAR
 			case 8 : {
 				system("cls");
 				break;
 			}
+			//APPEND
+			case 11 : { //*******************T*******************estar
+				append(arquivo_aberto);
+				break;
+			}
 			
+			//LIST STRUCTURE
 			case 16 : {
 				
 				listarFields(arquivo_aberto, unid);
 				break;
 			}
 			
+			//CREATE
 			case 19 : {
 				
-				//Criar DBF
 				novoArquivo(unid, valor);
-				printf("Incluir dados ? <Y/N>: ");
+				printf("Incluir Fields ? (Y/N): ");
 				opc = toupper(getche());
 				
 				if(opc == 'Y')
 				{
 					arquivo_aberto = abrirArquivo(unid, valor);
 					insertFields(arquivo_aberto);
+					
+					printf("Input data records now? (Y/N)");
+					opc = toupper(getch());
+					while(opc == 'Y')
+					{
+						//Chamada
+						append(arquivo_aberto);
+						printf("Continue including? (Y/N)");
+						opc = toupper(getch());
+					}
 				}
+				printf("\n");
 				break;
 			}
 			
+			//USE
 			case 20 : {
 				arquivo_aberto = abrirArquivo(unid, valor);
 				
@@ -85,6 +119,7 @@ int main()
 				break;
 			}
 			
+			//SET DEFAULT TO
 			case 22 : {
 				arquivo_aberto = NULL;
 				trocaUnidade(&unid, toupper(valor[0]));
