@@ -11,12 +11,12 @@
 #include "manipulations.h"
 
 
-struct pointers {
+/*struct pointers {
 	
 	//unidade aberta
 	//arquivo aberto
 	//registro atual
-};
+};*/
 
 
 int main()
@@ -124,6 +124,15 @@ int main()
 				arquivo_aberto = NULL;
 				trocaUnidade(&unid, toupper(valor[0]));
 				printf("Diretorio atual: [%c:]\n", unid->letter);
+				break;
+			}
+			
+			//LIST FOR
+			case 23 : {
+				//FUNCOES
+				/*printf("\n%s", comando_field);
+				printf("\n%s", valor);
+				getch()	;*/
 				break;
 			}
 			default :

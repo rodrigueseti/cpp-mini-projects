@@ -146,25 +146,91 @@ void append (Arq *arq)
 
 void list (Arq *arq) {
 	
-	if(arq->cmps != NULL)
+	if(arq != NULL && arq->cmps != NULL) //Ok
 	{
-		if(arq->cmps->p_dados != NULL)
+		if(arq->cmps->p_dados != NULL) //Ok
 		{
-			int i = 0;
+			int i = 1;
+			Status *posStts = arq->stts;
 			Campos *auxCmps = arq->cmps;
-			printf("Record#			");
 			
-			while (auxCmps != NULL) 
+			printf("Record#		");
+			while (auxCmps != NULL)
 			{
 				printf("%s		", auxCmps->fieldName);
 				auxCmps = auxCmps->prox;
 			}
+			printf("\n");
+			auxCmps = arq->cmps;
 			
-			while(1)
+			while(posStts != NULL) //ou posStts != NULL
 			{
-				//CONTINUACAO
-				auxCmps = arq->cmps;				
+				printf("%d		", i++);
+				while(auxCmps != NULL)
+				{
+					if(/*SET DELETED off/on*/ 0 || posStts->status)
+					{
+						switch(auxCmps->type)
+						{
+							case 'N' : {
+								printf("%.2f		", auxCmps->pAtual->valor.valorN);
+								break;
+							}
+							
+							case 'L' : {
+								printf("%c		", auxCmps->pAtual->valor.valorL);
+								break;
+							}
+							
+							case 'D' : {
+								printf("%s		", auxCmps->pAtual->valor.valorD);
+								break;
+							}
+							case 'C' : {
+								printf("%s		", auxCmps->pAtual->valor.valorC);
+								break;
+							}
+							case 'M' : {
+								printf("%s		", auxCmps->pAtual->valor.valorM);
+								break;
+							}
+						}
+					}
+					auxCmps->pAtual = auxCmps->pAtual->prox;
+					auxCmps = auxCmps->prox;
+				}
+				printf("\n");
+				posStts = posStts->prox;
+				auxCmps = arq->cmps;
 			}
+			//Retornar pAtual posStts para primeira posicao valida (nao marcada para exclusao).
+			
+			/*struct pointers {
+				//unidade aberta
+				//arquivo aberto
+				//registro atual
+			};*/
+			
+			posStts = arq->stts;
+			while(auxCmps != NULL)
+			{
+				auxCmps->pAtual = auxCmps->p_dados;
+				while(posStts != NULL  && posStts->status == 0)
+				{
+					auxCmps->pAtual = auxCmps->pAtual->prox;
+					posStts = posStts->prox;
+				}
+				auxCmps = auxCmps->prox;
+				if(auxCmps != NULL)
+					posStts = arq->stts;
+			}
+			auxCmps = arq->cmps;
 		}
+		//printf("\n");
 	}
+}
+
+void listFor (Arq *arq, char field[], char valor[])
+{
+	
 }
