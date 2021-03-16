@@ -192,3 +192,51 @@ void createNewCell (Campos *open_field, char info[])
 	}
 }
 
+
+int indexOf(char str[], char subs[]) //int indexOf(dynStr *str, dynStr *subs)
+{
+	unsigned short int flag = 0;
+	char auxStr[30];
+	char auxSubs[30];
+	
+	strcpy(auxStr, str);
+	strcpy(auxSubs, subs);
+	
+	int pos = -1;
+	int i = 0;
+	int x;
+	int y;
+	
+	if (str[0] == '\0' || subs[0] == '\0' || strlen(subs) > strlen(str))
+		return -1;
+	
+	while (str[i] != '\0' && !flag)
+	{
+		if(subs[0] == str[i]) //if(str->letter= subs->letter)
+		{
+			flag = 1;
+			x = i; //auxStr = str;
+			y = 0; //auxSubs = subs;
+			
+			while (auxStr[x] != '\0' && auxSubs[y] != '\0' && flag)
+			{
+				flag = auxStr[x] != auxSubs[y] ? 0 : 1;
+				/*
+				if(auxStr[x] != auxSubs[y])
+					flag = 0;
+				*/
+					
+				x++; //auxStr = auxStr->next;
+				y++; //auxSubs = auxSubs->next;
+			}
+		}
+		pos++; //str = str->next;
+		i++;
+	}
+	if(auxSubs[y] == '\0' && flag == 1)
+		return pos;
+	return -1;
+}
+
+
+
