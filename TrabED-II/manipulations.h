@@ -118,39 +118,54 @@ void listarFields(Arq *arq, Dir *uni)
 
 void append (Arq *arq)
 {
-	Campos *aux = arq->cmps;
-	char info[50];
-	
-	if(aux != NULL) //Exibicao das Fields
+	if(arq != NULL)
 	{
-		system("cls");
+		Campos *aux = arq->cmps;
+		char info[50];
+		
+		if(aux != NULL) //Exibicao das Fields
+		{
+			system("cls");
+			while(aux != NULL)
+			{
+				printf("%s\n", aux->fieldName);
+				aux = aux->prox;
+			}
+			aux = arq->cmps;
+			createNewStatus(arq);
+		}
+		
+		int i = 1;
 		while(aux != NULL)
 		{
-			printf("%s\n", aux->fieldName);
+			gotoxy(17, i++);
+			fflush(stdin);
+			gets(info);
+			createNewCell(aux, info);
 			aux = aux->prox;
 		}
-		aux = arq->cmps;
-		createNewStatus(arq);
-	}
-	
-	int i = 1;
-	while(aux != NULL)
-	{
-		gotoxy(17, i++);
-		fflush(stdin);
-		gets(info);
-		createNewCell(aux, info);
-		aux = aux->prox;
 	}
 }
 
-void list (Arq *arq) {
+int getRegSize(Status *stts)
+{
+	int i = 0;
+	Status *aux = stts;
+	while(aux != NULL)
+		if(aux->status)
+			i++;
+	return i;
+}
+
+void list (Arq *arq) { //Ok
 	
-	if(arq != NULL && arq->cmps != NULL && arq->cmps->p_dados != NULL) //Ok
+	if(arq != NULL && arq->stts != NULL && getRegSize(arq->stts)) //Ok
 	{
 		int i = 1;
 		Status *posStts = arq->stts;
 		Campos *auxCmps = arq->cmps;
+		unsigned char flag;
+		
 		
 		printf("Record#		");
 		while (auxCmps != NULL)
@@ -163,11 +178,17 @@ void list (Arq *arq) {
 		
 		while(posStts != NULL) //ou posStts != NULL
 		{
-			printf("%d		", i++);
+			flag = 1;
 			while(auxCmps != NULL)
 			{
 				if(/*SET DELETED off/on*/ 0 || posStts->status)
 				{
+					if(flag)
+					{
+						printf("%d		", i++);
+						flag = 0;
+					}
+					
 					switch(auxCmps->type)
 					{
 						case 'N' : {
@@ -227,21 +248,35 @@ void list (Arq *arq) {
 	}
 }
 
-int getRegSize(Status *stts)
-{
-	
-}
+
 
 void listFor (Arq *arq, char field[], char valor[])
 {
-	int i = indexOf();
-	
-	if(arq != NULL && arq->cmps != NULL && arq->cmps->p_dados != NULL && getRegSize())
+	if(arq != NULL && arq->stts != NULL && getRegSize(arq->stts))
 	{
+		//POSICIONA PONTEIROS
 		int i = 1;
+		unsigned char flag = 0;
 		Status *posStts = arq->stts;
 		Campos *auxCmps = arq->cmps;
+		Campos *fieldEncontrada;
+		//POSICIONA PONTEIROS
 		
+		
+		
+		//Já verificando se Field exisite
+		while (auxCmps != NULL && !flag)
+		{
+			if(!stricmp(auxCmps->fieldName, field))
+				flag = 1;
+			auxCmps = auxCmps->prox;
+		}
+		fieldEncontrada = auxCmps;
+		auxCmps = arq->cmps;
+		//Já verificando se Field exisite
+				
+				
+		//EXIBE FIELDS
 		printf("Record#		");
 		while (auxCmps != NULL)
 		{
@@ -250,13 +285,15 @@ void listFor (Arq *arq, char field[], char valor[])
 		}
 		printf("\n");
 		auxCmps = arq->cmps;
+		//EXIBE FIELDS
+		
 		
 		while(posStts != NULL)
 		{
 			printf("%d		", i++);
 			while(auxCmps != NULL)
 			{
-				if(/*SET DELETED off/on*/ 0 || posStts->status)
+				if((/*SET DELETED off/on*/ 0 || posStts->status) && indexOf(field, valor))
 				{
 					switch(auxCmps->type)
 					{
